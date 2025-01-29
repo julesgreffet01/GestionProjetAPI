@@ -1,0 +1,103 @@
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL,
+    log VARCHAR(50) UNIQUE NOT NULL,
+    del BOOLEAN DEFAULT FALSE,
+    mdp VARCHAR(250) NOT NULL,
+    CONSTRAINT PK_User PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS Roles (
+    id SERIAL,
+    nom VARCHAR(200) UNIQUE,
+    CONSTRAINT PK_Roles PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS Projects (
+    id SERIAL,
+    nom VARCHAR(250),
+    description VARCHAR(250),
+    del BOOLEAN DEFAULT FALSE,
+    idCreateur INTEGER,
+    CONSTRAINT PK_Proj PRIMARY KEY (id),
+    CONSTRAINT FK_proj FOREIGN KEY (idCreateur) REFERENCES Users (id)
+);
+
+
+-- table relation
+CREATE TABLE UserProject (
+    idUser    INTEGER NOT NULL,
+    idProject INTEGER NOT NULL,
+    idRole    INTEGER NOT NULL,
+    CONSTRAINT pk_user_project PRIMARY KEY (idUser, idProject),
+    CONSTRAINT fk_user FOREIGN KEY (idUser) REFERENCES Users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_project FOREIGN KEY (idProject) REFERENCES Projects (id) ON DELETE CASCADE,
+    CONSTRAINT fk_role FOREIGN KEY (idRole) REFERENCES Roles (id) ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS ToDo (
+    id SERIAL,
+    nom VARCHAR(250),
+    del BOOLEAN DEFAULT FALSE,
+    idProject INTEGER,
+    CONSTRAINT PK_Todo PRIMARY KEY (id),
+    CONSTRAINT FK_Todo FOREIGN KEY (idProject) REFERENCES Projects (id)
+);
+
+CREATE TABLE IF NOT EXISTS ToDoTasks (
+    id SERIAL,
+    lib VARCHAR(250),
+    ordre INTEGER,
+    realised BOOLEAN DEFAULT FALSE,
+    idRealisateur INTEGER,
+    idTodo INTEGER,
+    CONSTRAINT PK_ToDoTask PRIMARY KEY (id),
+    CONSTRAINT FK_ToDoTask_1 FOREIGN KEY (idTodo) REFERENCES ToDo (id)
+);
+
+
+-- table relation
+CREATE TABLE IF NOT EXISTS TodoUsers (
+    idUser INTEGER NOT NULL,
+    idTask INTEGER NOT NULL,
+    CONSTRAINT PK_Realisator PRIMARY KEY (idUser, idTask),
+    CONSTRAINT FK_Real_1 FOREIGN KEY (idUser) REFERENCES Users (id) ON DELETE CASCADE,
+    CONSTRAINT FK_Real_2 FOREIGN KEY (idTask) REFERENCES ToDoTasks (id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE IF NOT EXISTS Trellos (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(250) NOT NULL ,
+    idProj INTEGER NOT NULL,
+    FOREIGN KEY (idProj) REFERENCES Projects (id) ON DELETE CASCADE
+);
+
+CREATE TABLE Lists (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    idTrello INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    FOREIGN KEY (idTrello) REFERENCES Trellos (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Cards (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    idList INTEGER,
+    dateReal DATE,
+    position INTEGER NOT NULL,
+    realised BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (idList) REFERENCES Lists (idList) ON DELETE CASCADE
+);
+
+-- table relation
+CREATE TABLE CardUser (
+    idUser INTEGER NOT NULL,
+    idCard INTEGER NOT NULL,
+    CONSTRAINT PK_CardUser PRIMARY KEY (idUser, idCard),
+    CONSTRAINT FK_CU_1 FOREIGN KEY (idUser) REFERENCES Users (id),
+    CONSTRAINT FK_CU_2 FOREIGN KEY (idCard) REFERENCES Cards (id)
+);
