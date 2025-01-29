@@ -1,17 +1,20 @@
 CREATE TABLE IF NOT EXISTS Users (
     id SERIAL,
     log VARCHAR(50) UNIQUE NOT NULL,
-    del BOOLEAN DEFAULT FALSE,
     mdp VARCHAR(250) NOT NULL,
+    del BOOLEAN DEFAULT FALSE,
     CONSTRAINT PK_User PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS Roles (
     id SERIAL,
     nom VARCHAR(200) UNIQUE,
+    del BOOLEAN DEFAULT FALSE,
     CONSTRAINT PK_Roles PRIMARY KEY (id)
 );
 
+
+-- ######################## projets ###########################
 CREATE TABLE IF NOT EXISTS Projects (
     id SERIAL,
     nom VARCHAR(250),
@@ -34,6 +37,8 @@ CREATE TABLE UserProject (
     CONSTRAINT fk_role FOREIGN KEY (idRole) REFERENCES Roles (id) ON DELETE RESTRICT
 );
 
+
+-- ################ to do #####################
 CREATE TABLE IF NOT EXISTS ToDo (
     id SERIAL,
     nom VARCHAR(250),
@@ -45,14 +50,17 @@ CREATE TABLE IF NOT EXISTS ToDo (
 
 CREATE TABLE IF NOT EXISTS ToDoTasks (
     id SERIAL,
-    lib VARCHAR(250),
-    ordre INTEGER,
+    lib TEXT,
+    ordre INTEGER NOT NULL,
+    enCours BOOLEAN DEFAULT FALSE,
     realised BOOLEAN DEFAULT FALSE,
+    dateReal DATE,
     idRealisateur INTEGER,
-    idTodo INTEGER,
+    idTodo INTEGER NOT NULL,
     CONSTRAINT PK_ToDoTask PRIMARY KEY (id),
-    CONSTRAINT FK_ToDoTask_1 FOREIGN KEY (idTodo) REFERENCES ToDo (id)
-);
+    CONSTRAINT FK_ToDoTask_1 FOREIGN KEY (idTodo) REFERENCES ToDo (id),
+    CONSTRAINT FK_ToDoTask_2 FOREIGN KEY (idRealisateur) REFERENCES Users (id)
+    );
 
 
 -- table relation
@@ -66,9 +74,12 @@ CREATE TABLE IF NOT EXISTS TodoUsers (
 
 
 
+
+-- ######################trello#########################
 CREATE TABLE IF NOT EXISTS Trellos (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(250) NOT NULL ,
+    del BOOLEAN DEFAULT FALSE,
     idProj INTEGER NOT NULL,
     FOREIGN KEY (idProj) REFERENCES Projects (id) ON DELETE CASCADE
 );
@@ -76,8 +87,9 @@ CREATE TABLE IF NOT EXISTS Trellos (
 CREATE TABLE Lists (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    idTrello INTEGER NOT NULL,
     position INTEGER NOT NULL,
+    del BOOLEAN DEFAULT FALSE,
+    idTrello INTEGER NOT NULL,
     FOREIGN KEY (idTrello) REFERENCES Trellos (id) ON DELETE CASCADE
 );
 
@@ -86,18 +98,20 @@ CREATE TABLE Cards (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     description TEXT,
-    idList INTEGER,
     dateReal DATE,
     position INTEGER NOT NULL,
     realised BOOLEAN DEFAULT FALSE,
+    idList INTEGER,
     FOREIGN KEY (idList) REFERENCES Lists (idList) ON DELETE CASCADE
 );
+
+
 
 -- table relation
 CREATE TABLE CardUser (
     idUser INTEGER NOT NULL,
     idCard INTEGER NOT NULL,
     CONSTRAINT PK_CardUser PRIMARY KEY (idUser, idCard),
-    CONSTRAINT FK_CU_1 FOREIGN KEY (idUser) REFERENCES Users (id),
-    CONSTRAINT FK_CU_2 FOREIGN KEY (idCard) REFERENCES Cards (id)
+    CONSTRAINT FK_CU_1 FOREIGN KEY (idUser) REFERENCES Users (id) ON DELETE CASCADE,
+    CONSTRAINT FK_CU_2 FOREIGN KEY (idCard) REFERENCES Cards (id) ON DELETE CASCADE
 );
