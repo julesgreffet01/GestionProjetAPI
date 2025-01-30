@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS ToDoTasks (
 
 
 -- table relation
-CREATE TABLE IF NOT EXISTS TodoUsers (
+CREATE TABLE IF NOT EXISTS ToDoUsers (
     idUser INTEGER NOT NULL,
     idTask INTEGER NOT NULL,
     del BOOLEAN DEFAULT FALSE,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS TodoUsers (
 
 
 -- ######################trello#########################
-CREATE TABLE IF NOT EXISTS Trellos (
+CREATE TABLE IF NOT EXISTS Trello (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(250) NOT NULL ,
     del BOOLEAN DEFAULT FALSE,
@@ -86,9 +86,10 @@ CREATE TABLE IF NOT EXISTS Trellos (
     FOREIGN KEY (idProj) REFERENCES Projects (id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE Lists (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    nom VARCHAR(100) NOT NULL,
     position INTEGER NOT NULL,
     del BOOLEAN DEFAULT FALSE,
     idTrello INTEGER NOT NULL,
@@ -98,7 +99,7 @@ CREATE TABLE Lists (
 
 CREATE TABLE Cards (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
+    nom VARCHAR(200) NOT NULL,
     description TEXT,
     dateReal DATE,
     position INTEGER NOT NULL,
@@ -119,7 +120,7 @@ CREATE TABLE CardUser (
     CONSTRAINT FK_CU_2 FOREIGN KEY (idCard) REFERENCES Cards (id) ON DELETE CASCADE
 );
 
-CREATE TABLE admin (
+CREATE TABLE Admin (
     id SERIAL PRIMARY KEY,
     log VARCHAR(200),
     mdp VARCHAR(200)

@@ -34,7 +34,7 @@ BEGIN
     SET del = FALSE
     WHERE idUser = NEW.id
       AND idCard IN (SELECT id FROM Cards WHERE idList IN
-      (SELECT id FROM Lists WHERE idTrello IN SELECT id FROM Trellos WHERE idProj IN (SELECT id FROM Projects WHERE del = FALSE)))
+      (SELECT id FROM Lists WHERE idTrello IN SELECT id FROM Trello WHERE idProj IN (SELECT id FROM Projects WHERE del = FALSE)))
     );
 
     UPDATE ToDoTasks

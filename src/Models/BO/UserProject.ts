@@ -43,4 +43,13 @@ export class UserProject {
     set del(value: boolean) {
         this._del = value;
     }
+
+    toJson(): object {
+        return {
+            idUser: this.idUser,
+            idProj: this.idProj,
+            idRole: this.idRole,
+            del: this.del
+        }
+    }
 }
