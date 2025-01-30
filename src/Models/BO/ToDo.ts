@@ -1,20 +1,17 @@
-import {User} from "./User";
-export class Project {
+import {Project} from "./Project";
+
+export class ToDo {
     private _id: number;
     private _nom: string;
-    private _desc: string;
     private _del: boolean;
-    private _creator: User;
+    private _project: Project;
 
-
-    constructor(id: number, nom: string, desc: string, del: boolean, creator: User) {
+    constructor(id: number, nom: string, del: boolean, project: Project) {
         this._id = id;
         this._nom = nom;
-        this._desc = desc;
         this._del = del;
-        this._creator = creator;
+        this._project = project;
     }
-
 
     get id(): number {
         return this._id;
@@ -32,14 +29,6 @@ export class Project {
         this._nom = value;
     }
 
-    get desc(): string {
-        return this._desc;
-    }
-
-    set desc(value: string) {
-        this._desc = value;
-    }
-
     get del(): boolean {
         return this._del;
     }
@@ -48,19 +37,18 @@ export class Project {
         this._del = value;
     }
 
-    get creator(): User {
-        return this._creator;
+    get project(): Project {
+        return this._project;
     }
 
-    set creator(value: User) {
-        this._creator = value;
+    set project(value: Project) {
+        this._project = value;
     }
 
     toBDD(): object {
         return {
             nom: this.nom,
-            description: this.desc,
-            idCreateur: this.creator.id
+            idProject: this._project.id
         }
     }
 
@@ -68,10 +56,8 @@ export class Project {
         return {
             id: this.id,
             nom: this.nom,
-            desc: this.desc,
             del: this.del,
-            creator: this.creator
+            project: this.project
         }
     }
 }
-

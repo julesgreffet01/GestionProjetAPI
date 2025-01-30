@@ -36,24 +36,13 @@ abstract class GlobalDAO {
         }
     }
 
-    static async find(conditions: Record<string, any> = {}): Promise<object | null> {
+    /*
+    static async find(id: number): Promise<object | null> {
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            let query = `SELECT * FROM ${tableName}`;
-            const values: any[] = [];
-
-            if (Object.keys(conditions).length > 0) {
-                const clauses = Object.keys(conditions).map((key, index) => {
-                    values.push(conditions[key]);
-                    return `${key} = $${index + 1}`;
-                });
-
-                query += " WHERE " + clauses.join(" AND ");
-            }
-
-            const result = await client.query(query, values);
-
+            let query = `SELECT * FROM ${tableName} WHERE id = ${id}`;
+            const result = await client.query(query);
             if (result.rows.length === 0) {
                 return null;
             } else if (result.rows.length === 1) {
@@ -65,6 +54,7 @@ abstract class GlobalDAO {
             client.release();
         }
     }
+     */
 
     static async create(data: any):Promise<object | null> {
         const client = await connectDB();
@@ -101,27 +91,23 @@ abstract class GlobalDAO {
 
     static async update(data: any): Promise<number | null> {
         const client = await connectDB();
-        if (typeof data.toBDD !== "function") {
-            return null;
-        }
-
-        const dataObject = data.toBDD();
-        if (!data.id) {
-            return null;
-        }
-
-        const tableName = this.prototype.getTableName();
-
-        const setClause = Object.keys(dataObject)
-            .map((key, index) => `${key} = $${index + 1}`)
-            .join(", ");
-
-        const values = [...Object.values(dataObject), data.id];
-
-        const query = `UPDATE ${tableName} SET ${setClause} WHERE id = $${values.length}`;
-
-
         try {
+            if (typeof data.toBDD !== "function") {
+                return null;
+            }
+
+            const dataObject = data.toBDD();
+            if (!data.id) {
+                return null;
+            }
+
+            const tableName = this.prototype.getTableName();
+
+            const setClause = Object.keys(dataObject)
+                .map((key, index) => `${key} = $${index + 1}`)
+                .join(", ");
+            const values = [...Object.values(dataObject), data.id];
+            const query = `UPDATE ${tableName} SET ${setClause} WHERE id = $${values.length}`;
             const result = await client.query(query, values);
             return result.rowCount;
         } catch (error) {
@@ -131,7 +117,7 @@ abstract class GlobalDAO {
         }
     }
 
-    static async delete(data: any): Promise<number | null> {
+    static async softDelete(data: any): Promise<number | null> {
         const client = await connectDB();
 
         try {
@@ -139,6 +125,7 @@ abstract class GlobalDAO {
             if (!data.id) {
                 return null;
             }
+
             const query = "";
             if(data.del){
                 const query = `UPDATE ${tableName} SET del = TRUE WHERE id = ${data.id}`;
@@ -153,7 +140,8 @@ abstract class GlobalDAO {
             client.release();
         }
     }
-    static async forceDelete(data: any): Promise<number | null> {
+
+    static async delete(data: any): Promise<number | null> {
         const client = await connectDB();
 
         try {
