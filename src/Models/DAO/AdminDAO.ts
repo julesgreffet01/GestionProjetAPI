@@ -19,20 +19,6 @@ export class AdminDAO extends GlobalDAO{
         );
     }
 
-    async find(id: number): Promise<Admin | null> {
-        const client = await connectDB();
-        try {
-            const tableName = this.getTableName();
-            const query = `SELECT * FROM ${tableName} WHERE id = $1 LIMIT 1`;
-            const result = await client.query(query, [id]);
-            return this.objectToClass(result.rows[0]);
-        } catch (e) {
-            return null;
-        } finally {
-            client.release();
-        }
-    }
-
     async authentification(log: string, mdp: string): Promise<Admin | null> {
         const client = await connectDB();
         try {

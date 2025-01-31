@@ -3,67 +3,62 @@ import connectDB from "../../Config/dbConfig";
 export abstract class GlobalDAO {
 
     abstract getTableName(): string;
-
     abstract objectToClass(row: object): object;
 
-    static async getAll(): Promise<object[] | null> {
+    static async getAll(): Promise<object[]> {
         const client = await connectDB();
-
         try {
             const tableName = this.prototype.getTableName();
-            const query = `SELECT * FROM $1 WHERE del = FALSE`;
-            const { rows } = await client.query(query, [tableName]);
+            const query = `SELECT * FROM ${tableName} WHERE del = FALSE`;
+            const { rows } = await client.query(query);
             return rows.map((row) => this.prototype.objectToClass(row));
-        } catch (e){
-            return null;
+        } catch (error) {
+            console.error("Error fetching all data:", error);
+            throw error;
         } finally {
             client.release();
         }
     }
 
-    static async forceGetAll(): Promise<object[] | null> {
+    static async forceGetAll(): Promise<object[]> {
         const client = await connectDB();
-
         try {
             const tableName = this.prototype.getTableName();
-            const query = `SELECT * FROM $1`;
-            const { rows } = await client.query(query, [tableName]);
+            const query = `SELECT * FROM ${tableName}`;
+            const { rows } = await client.query(query);
             return rows.map((row) => this.prototype.objectToClass(row));
-        } catch (e){
-            return null;
+        } catch (error) {
+            console.error("Error fetching all data (force):", error);
+            throw error;
         } finally {
             client.release();
         }
     }
 
-    /*
     static async find(id: number): Promise<object | null> {
+        if (!id) throw new Error("Invalid ID provided");
+
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            let query = `SELECT * FROM ${tableName} WHERE id = ${id}`;
-            const result = await client.query(query);
-            if (result.rows.length === 0) {
-                return null;
-            } else if (result.rows.length === 1) {
-                return this.prototype.objectToClass(result.rows[0]);
-            } else {
-                return result.rows.map(row => this.prototype.objectToClass(row));
-            }
+            const query = `SELECT * FROM ${tableName} WHERE id = $1 LIMIT 1`;
+            const { rows } = await client.query(query, [id]);
+
+            return rows.length > 0 ? this.prototype.objectToClass(rows[0]) : null;
+        } catch (error) {
+            console.error("Error fetching record:", error);
+            throw error;
         } finally {
             client.release();
         }
     }
-     */
 
-    static async create(data: any):Promise<object | null> {
+    static async create(data: any): Promise<object> {
+        if (typeof data.toBDD !== "function") throw new Error("Data must implement toBDD()");
+
         const client = await connectDB();
         try {
-            if (typeof data.toBDD !== "function") {
-                return null;
-            }
-
-            const tableName = this.prototype.getTableName(); // Obtenir le nom de la table
+            const tableName = this.prototype.getTableName();
             const dataObject = data.toBDD();
 
             const columns = Object.keys(dataObject).join(", ");
@@ -71,86 +66,78 @@ export abstract class GlobalDAO {
             const values = Object.values(dataObject);
 
             const query = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders}) RETURNING id`;
-
             const result = await client.query(query, values);
-            const lastInsertId = result.rows[0].id;
 
-            // Mettre à jour l'objet avec l'ID retourné
-            if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(data), "id")?.set) {
-                data.id = lastInsertId;
-            }
-
+            data.id = result.rows[0].id;
             return this.prototype.objectToClass(data);
-        } catch (e) {
-            return null;
+        } catch (error) {
+            console.error("Error creating record:", error);
+            throw error;
         } finally {
             client.release();
         }
     }
 
-
     static async update(data: any): Promise<number | null> {
+        if (typeof data.toBDD !== "function" || !data.id) throw new Error("Invalid data or missing ID");
+
         const client = await connectDB();
         try {
-            if (typeof data.toBDD !== "function") {
-                return null;
-            }
-
-            const dataObject = data.toBDD();
-            if (!data.id) {
-                return null;
-            }
-
             const tableName = this.prototype.getTableName();
+            const dataObject = data.toBDD();
 
             const setClause = Object.keys(dataObject)
                 .map((key, index) => `${key} = $${index + 1}`)
                 .join(", ");
             const values = [...Object.values(dataObject), data.id];
+
             const query = `UPDATE ${tableName} SET ${setClause} WHERE id = $${values.length}`;
             const result = await client.query(query, values);
             return result.rowCount;
         } catch (error) {
-            return null;
+            console.error("Error updating record:", error);
+            throw error;
         } finally {
             client.release();
         }
     }
 
     static async softDelete(data: any): Promise<number | null> {
-        const client = await connectDB();
+        if (!data.id) throw new Error("Invalid ID provided for deletion");
 
+        const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            if (!data.id) {
-                return null;
+            let query: string;
+
+            if (data.del) {
+                query = `UPDATE ${tableName} SET del = TRUE WHERE id = $1`;
+            } else {
+                query = `DELETE FROM ${tableName} WHERE id = $1`;
             }
 
-            const query = "";
-            if(data.del){
-                const query = `UPDATE ${tableName} SET del = TRUE WHERE id = ${data.id}`;
-            } else {
-                const query = `DELETE FROM ${tableName} WHERE id = ${data.id}`;
-            }
-            const result = await client.query(query);
+            const result = await client.query(query, [data.id]);
             return result.rowCount;
-        } catch (e) {
-            return null;
+        } catch (error) {
+            console.error("Error in soft delete:", error);
+            throw error;
         } finally {
             client.release();
         }
     }
 
     static async delete(data: any): Promise<number | null> {
-        const client = await connectDB();
+        if (!data.id) throw new Error("Invalid ID provided for deletion");
 
+        const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            const query = `DELETE FROM ${tableName} WHERE id = ${data.id}`;
-            const result = await client.query(query);
+            const query = `DELETE FROM ${tableName} WHERE id = $1`;
+            const result = await client.query(query, [data.id]);
             return result.rowCount;
-        } catch (e) {
-            return null;
+        } catch (error) {
+            console.error("Error in delete:", error);
+            throw error;
         } finally {
             client.release();
         }
