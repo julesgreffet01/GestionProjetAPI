@@ -1,5 +1,6 @@
-import {Project} from "./Project";
 import {ToDoTask} from "./ToDoTask";
+import {UserProject} from "./UserProject";
+import {CardUser} from "./CardUser";
 
 export class User {
     private _id: number;
@@ -7,8 +8,8 @@ export class User {
     private _mdp: string;
     private _del: boolean;
     private _allTasks: ToDoTask[];
-    private _allCards: object[];
-    private _allProjects: Project[];
+    private _allCards: CardUser[];
+    private _allProjects: UserProject[];
 
 
     constructor(id: number, log: string, mdp: string, del: boolean) {
@@ -62,19 +63,19 @@ export class User {
         this._allTasks = value;
     }
 
-    get allCards(): object[] {
+    get allCards(): CardUser[] {
         return this._allCards;
     }
 
-    set allCards(value: object[]) {
+    set allCards(value: CardUser[]) {
         this._allCards = value;
     }
 
-    get allProjects(): Project[] {
+    get allProjects(): UserProject[] {
         return this._allProjects;
     }
 
-    set allProjects(value: Project[]) {
+    set allProjects(value: UserProject[]) {
         this._allProjects = value;
     }
 

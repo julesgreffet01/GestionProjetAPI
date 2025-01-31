@@ -1,6 +1,6 @@
 import connectDB from "../../Config/dbConfig";
 
-abstract class GlobalDAO {
+export abstract class GlobalDAO {
 
     abstract getTableName(): string;
 
