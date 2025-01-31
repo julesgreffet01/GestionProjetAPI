@@ -120,6 +120,8 @@ CREATE TABLE CardUser (
     CONSTRAINT FK_CU_2 FOREIGN KEY (idCard) REFERENCES Cards (id) ON DELETE CASCADE
 );
 
+
+-- ############ administration #############
 CREATE TABLE Admin (
     id SERIAL PRIMARY KEY,
     log VARCHAR(200),
