@@ -1,7 +1,6 @@
 -- ############# user ##############
 CREATE OR REPLACE FUNCTION propagate_del_from_users() RETURNS VOID AS $$
 BEGIN
-    UPDATE Projects SET del = TRUE WHERE idCreateur = NEW.id;
     UPDATE UserProject SET del = TRUE WHERE idUser = NEW.id;
     UPDATE ToDoTasks SET idRealisateur = NULL WHERE idRealisateur = NEW.id;
     UPDATE TodoUsers SET del = TRUE WHERE idUser = NEW.id;
@@ -20,21 +19,12 @@ CREATE TRIGGER trigger_propagate_del_users
 --restore
 CREATE OR REPLACE FUNCTION restore_del_for_user_relations() RETURNS VOID AS $$
 BEGIN
-    UPDATE UserProject
-    SET del = FALSE
-    WHERE idUser = NEW.id
-      AND idProject IN (SELECT id FROM Projects WHERE del = FALSE);
+    UPDATE UserProject SET del = FALSE WHERE idUser = NEW.id AND idProject IN (SELECT id FROM Projects WHERE del = FALSE);
 
-    UPDATE TodoUsers
-    SET del = FALSE
-    WHERE idUser = NEW.id
-      AND idTask IN (SELECT id FROM ToDoTasks WHERE del = FALSE);
+    UPDATE TodoUsers SET del = FALSE WHERE idUser = NEW.id AND idTask IN (SELECT id FROM ToDoTasks WHERE del = FALSE);
 
-    UPDATE CardUser
-    SET del = FALSE
-    WHERE idUser = NEW.id
-      AND idCard IN (SELECT id FROM Cards WHERE idList IN
-      (SELECT id FROM Lists WHERE idTrello IN SELECT id FROM Trello WHERE idProj IN (SELECT id FROM Projects WHERE del = FALSE)))
+    UPDATE CardUser SET del = FALSE WHERE idUser = NEW.id AND idCard IN (SELECT id FROM Cards WHERE idList IN
+      (SELECT id FROM Lists WHERE idTrello IN SELECT id FROM Trello WHERE idProj IN (SELECT id FROM Projects WHERE del = FALSE))
     );
 
     UPDATE ToDoTasks
