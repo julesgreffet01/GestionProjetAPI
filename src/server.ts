@@ -1,17 +1,22 @@
-import express from 'express';
+import express, { Request, Response } from 'express';  // Importation d'Express avec les types Request et Response
 const dotenv = require('dotenv').config();
-const port = 5000;
+import verifyAndHashPasswords from './hashage';
+
 
 const app = express();
+const port = 5000;
 
-//middleware (permet de traiter les données de la request)
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// Middleware pour traiter les données JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//points d'entré des routes
+// Route pour lancer le processus de hachage des mots de passe
+app.post('/hash', (req: Request, res: Response) => {
+    verifyAndHashPasswords(req, res);  // Appeler la fonction de hashage
+});
 
 
-//lancer le serve
-app.listen(port, ()=>{
+// Démarrer le serveur
+app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
