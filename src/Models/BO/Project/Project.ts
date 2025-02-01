@@ -1,13 +1,13 @@
-import {User} from "./User";
+import {User} from "../User";
 export class Project {
     private _id: number;
     private _nom: string;
     private _desc: string;
     private _del: boolean;
-    private _creator: User;
+    private _creator: User | null | object;
 
 
-    constructor(id: number, nom: string, desc: string, del: boolean, creator: User) {
+    constructor(id: number, nom: string, desc: string, del: boolean, creator: User | null | object) {
         this._id = id;
         this._nom = nom;
         this._desc = desc;
@@ -48,19 +48,21 @@ export class Project {
         this._del = value;
     }
 
-    get creator(): User {
+    get creator(): User | null | object {
         return this._creator;
     }
 
-    set creator(value: User) {
+    set creator(value: User | null | object) {
         this._creator = value;
     }
 
     toBDD(): object {
+        //@ts-ignore
+        const idCrea = this.creator ? this.creator.id : null;
         return {
             nom: this.nom,
             description: this.desc,
-            idCreateur: this.creator.id
+            idCreateur: idCrea
         }
     }
 

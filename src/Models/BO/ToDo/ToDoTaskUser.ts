@@ -1,14 +1,11 @@
-import {Card} from "./Card";
-import {User} from "./User";
-
-export class CardUser {
+export class ToDoTaskUser {
     private _idUser: number;
-    private _idCard: number;
+    private _idTask: number;
     private _del: boolean;
 
-    constructor(idUser: number, idCard: number, del: boolean) {
+    constructor(idUser: number, idTask: number, del: boolean) {
         this._idUser = idUser;
-        this._idCard = idCard;
+        this._idTask = idTask;
         this._del = del;
     }
 
@@ -20,12 +17,12 @@ export class CardUser {
         this._idUser = value;
     }
 
-    get idCard(): number {
-        return this._idCard;
+    get idTask(): number {
+        return this._idTask;
     }
 
-    set idCard(value: number) {
-        this._idCard = value;
+    set idTask(value: number) {
+        this._idTask = value;
     }
 
     get del(): boolean {
@@ -39,7 +36,7 @@ export class CardUser {
     toJson(): object {
         return {
             idUser: this.idUser,
-            idCard: this.idCard,
+            idTask: this.idTask,
             del: this.del
         }
     }

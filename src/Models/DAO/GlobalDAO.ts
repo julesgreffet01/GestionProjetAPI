@@ -3,7 +3,7 @@ import connectDB from "../../Config/dbConfig";
 export abstract class GlobalDAO {
 
     abstract getTableName(): string;
-    abstract objectToClass(row: object): object;
+    abstract objectToClass(row: any): Promise<object>;
 
     static async getAll(): Promise<object[]> {
         const client = await connectDB();
@@ -11,7 +11,7 @@ export abstract class GlobalDAO {
             const tableName = this.prototype.getTableName();
             const query = `SELECT * FROM ${tableName} WHERE del = FALSE`;
             const { rows } = await client.query(query);
-            return rows.map((row) => this.prototype.objectToClass(row));
+            return Promise.all(rows.map(async (row) => await this.prototype.objectToClass(row)));
         } catch (error) {
             console.error("Error fetching all data:", error);
             throw error;
@@ -26,7 +26,7 @@ export abstract class GlobalDAO {
             const tableName = this.prototype.getTableName();
             const query = `SELECT * FROM ${tableName}`;
             const { rows } = await client.query(query);
-            return rows.map((row) => this.prototype.objectToClass(row));
+            return Promise.all(rows.map(async (row) => await this.prototype.objectToClass(row)));
         } catch (error) {
             console.error("Error fetching all data (force):", error);
             throw error;
@@ -36,7 +36,7 @@ export abstract class GlobalDAO {
     }
 
     static async find(id: number): Promise<object | null> {
-        if (!id) throw new Error("Invalid ID provided");
+        if (!id) throw new Error("Invalid ID");
 
         const client = await connectDB();
         try {
@@ -44,7 +44,7 @@ export abstract class GlobalDAO {
             const query = `SELECT * FROM ${tableName} WHERE id = $1 LIMIT 1`;
             const { rows } = await client.query(query, [id]);
 
-            return rows.length > 0 ? this.prototype.objectToClass(rows[0]) : null;
+            return rows.length > 0 ? await this.prototype.objectToClass(rows[0]) : null;
         } catch (error) {
             console.error("Error fetching record:", error);
             throw error;

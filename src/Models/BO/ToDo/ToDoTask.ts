@@ -1,4 +1,4 @@
-import {User} from "./User";
+import {User} from "../User";
 import {ToDo} from "./ToDo";
 
 export class ToDoTask {
@@ -8,10 +8,10 @@ export class ToDoTask {
     private _enCours: boolean;
     private _realised: boolean;
     private _dateReal: Date;
-    private _realisateur: User;
-    private _ToDo: ToDo;
+    private _realisateur: User | null | object;
+    private _ToDo: ToDo | null | object;
 
-    constructor(id: number, lib: string, ordre: number, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User, ToDo: ToDo) {
+    constructor(id: number, lib: string, ordre: number, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User | null | object, ToDo: ToDo | null | object) {
         this._id = id;
         this._lib = lib;
         this._ordre = ordre;
@@ -71,33 +71,38 @@ export class ToDoTask {
         this._dateReal = value;
     }
 
-    get realisateur(): User {
+    get realisateur(): User | null | object {
         return this._realisateur;
     }
 
-    set realisateur(value: User) {
+    set realisateur(value: User | null | object) {
         this._realisateur = value;
     }
 
-    get ToDo(): ToDo {
+    get ToDo(): ToDo | null | object {
         return this._ToDo;
     }
 
-    set ToDo(value: ToDo) {
+    set ToDo(value: ToDo | null | object) {
         this._ToDo = value;
     }
 
     toBDD(): object {
+        //@ts-ignore
+        const idReal = this.realisateur ? this.realisateur.id : null;
+        //@ts-ignore
+        const idToDo = this.ToDo ? this.ToDo.id : null;
         return {
             lib: this.lib,
             ordre: this.ordre,
             enCours: this.enCours,
             realised: this.realised,
             dateReal: this.dateReal,
-            idRealisateur: this.realisateur.id,
-            idTodo: this.ToDo.id
-        }
+            idRealisateur: idReal,
+            idTodo: idToDo
+        };
     }
+
 
     toJson(): object {
         return {

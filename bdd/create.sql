@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Projects (
 
 
 -- table relation
-CREATE TABLE UserProject (
+CREATE TABLE ProjectUser (
     idUser    INTEGER NOT NULL,
     idProject INTEGER NOT NULL,
     idRole    INTEGER NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS ToDoTasks (
 
 
 -- table relation
-CREATE TABLE IF NOT EXISTS ToDoUsers (
+CREATE TABLE IF NOT EXISTS ToDoTasksUsers (
     idUser INTEGER NOT NULL,
     idTask INTEGER NOT NULL,
     del BOOLEAN DEFAULT FALSE,
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Trello (
 );
 
 
-CREATE TABLE Lists (
+CREATE TABLE TrelloLists (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     position INTEGER NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE Lists (
 );
 
 
-CREATE TABLE Cards (
+CREATE TABLE TrelloCards (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(200) NOT NULL,
     description TEXT,
@@ -111,7 +111,7 @@ CREATE TABLE Cards (
 
 
 -- table relation
-CREATE TABLE CardUser (
+CREATE TABLE TrelloCardUser (
     idUser INTEGER NOT NULL,
     idCard INTEGER NOT NULL,
     del BOOLEAN DEFAULT FALSE,

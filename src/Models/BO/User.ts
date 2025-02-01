@@ -1,10 +1,13 @@
+import {ToDoTask} from "./ToDo/ToDoTask";
+import {TrelloCard} from "./Trello/TrelloCard";
+
 export class User {
     private _id: number;
     private _log: string;
     private _mdp: string;
     private _del: boolean;
-    private _allTasks: object[];
-    private _allCards: object[];
+    private _allTasks: ToDoTask[];
+    private _allCards: TrelloCard[];
     private _allProjects: object[];
 
 
@@ -51,19 +54,19 @@ export class User {
         this._del = value;
     }
 
-    get allTasks(): object[] {
+    get allTasks(): ToDoTask[] {
         return this._allTasks;
     }
 
-    set allTasks(value: object[]) {
+    set allTasks(value: ToDoTask[]) {
         this._allTasks = value;
     }
 
-    get allCards(): object[] {
+    get allCards(): TrelloCard[] {
         return this._allCards;
     }
 
-    set allCards(value: object[]) {
+    set allCards(value: TrelloCard[]) {
         this._allCards = value;
     }
 

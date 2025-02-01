@@ -8,7 +8,7 @@ export class AdminDAO extends GlobalDAO{
         return "Admin";
     }
 
-    objectToClass(row: object): Admin {
+    async objectToClass(row: any): Promise<Admin> {
         return new Admin(
             // @ts-ignore
             row["id"],

@@ -1,11 +1,11 @@
-export class ToDoUser {
+export class TrelloCardUser {
     private _idUser: number;
-    private _idTask: number;
+    private _idCard: number;
     private _del: boolean;
 
-    constructor(idUser: number, idTask: number, del: boolean) {
+    constructor(idUser: number, idCard: number, del: boolean) {
         this._idUser = idUser;
-        this._idTask = idTask;
+        this._idCard = idCard;
         this._del = del;
     }
 
@@ -17,12 +17,12 @@ export class ToDoUser {
         this._idUser = value;
     }
 
-    get idTask(): number {
-        return this._idTask;
+    get idCard(): number {
+        return this._idCard;
     }
 
-    set idTask(value: number) {
-        this._idTask = value;
+    set idCard(value: number) {
+        this._idCard = value;
     }
 
     get del(): boolean {
@@ -36,7 +36,7 @@ export class ToDoUser {
     toJson(): object {
         return {
             idUser: this.idUser,
-            idTask: this.idTask,
+            idCard: this.idCard,
             del: this.del
         }
     }

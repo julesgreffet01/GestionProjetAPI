@@ -1,16 +1,16 @@
-import {Project} from "./Project";
+import {Project} from "../Project/Project";
 
-export class Trello {
+export class ToDo {
     private _id: number;
     private _nom: string;
     private _del: boolean;
-    private _projet: Project;
+    private _project: Project | null | object;
 
-    constructor(id: number, nom: string, del: boolean, projet: Project) {
+    constructor(id: number, nom: string, del: boolean, project: Project | null | object) {
         this._id = id;
         this._nom = nom;
         this._del = del;
-        this._projet = projet;
+        this._project = project;
     }
 
     get id(): number {
@@ -37,27 +37,29 @@ export class Trello {
         this._del = value;
     }
 
-    get projet(): Project {
-        return this._projet;
+    get project(): Project | null | object {
+        return this._project;
     }
 
-    set projet(value: Project) {
-        this._projet = value;
+    set project(value: Project | null | object) {
+        this._project = value;
     }
 
     toBDD(): object {
+        //@ts-ignore
+        const idProj = this.project ? this.project.id : null;
         return {
-            nom: this._nom,
-            idProj: this._projet.id
+            nom: this.nom,
+            idProject: idProj,
         }
     }
 
     toJson(): object {
         return {
-            id: this._id,
-            nom: this._nom,
-            del: this._del,
-            projet: this._projet
+            id: this.id,
+            nom: this.nom,
+            del: this.del,
+            project: this.project
         }
     }
 }

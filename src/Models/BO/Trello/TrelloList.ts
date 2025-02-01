@@ -1,13 +1,13 @@
 import {Trello} from './Trello';
 
-export class List {
+export class TrelloList {
     private _id: number;
     private _nom: string;
     private _position: number;
     private _del: boolean;
-    private _Trello: Trello;
+    private _Trello: Trello | null | object;
 
-    constructor(id: number, nom: string, position: number, del: boolean, Trello: Trello) {
+    constructor(id: number, nom: string, position: number, del: boolean, Trello: Trello | null | object) {
         this._id = id;
         this._nom = nom;
         this._position = position;
@@ -47,19 +47,21 @@ export class List {
         this._del = value;
     }
 
-    get Trello(): Trello {
+    get Trello(): Trello | null | object {
         return this._Trello;
     }
 
-    set Trello(value: Trello) {
+    set Trello(value: Trello | null | object) {
         this._Trello = value;
     }
 
     toBDD(): object {
+        //@ts-ignore
+        const idTrello = this.Trello ? this.Trello.id : null;
         return {
             nom: this.nom,
             position: this.position,
-            idTrello: this.Trello.id
+            idTrello: idTrello
         }
     }
 

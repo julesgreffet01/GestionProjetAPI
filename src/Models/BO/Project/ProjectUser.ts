@@ -1,4 +1,4 @@
-export class UserProject {
+export class ProjectUser {
     private _idUser: number;
     private _idProj: number;
     private _idRole: number;

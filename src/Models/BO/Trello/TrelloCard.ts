@@ -1,15 +1,15 @@
-import {List} from "./List";
+import {TrelloList} from "./TrelloList";
 
-export class Card {
+export class TrelloCard {
     private _id: number;
     private _nom: string;
     private _description: string;
     private _dateReal: Date;
     private _position: number;
     private _realised: boolean;
-    private _list: List;
+    private _list: TrelloList | null | object;
 
-    constructor(id: number, nom: string, description: string, dateReal: Date, position: number, realised: boolean, list: List) {
+    constructor(id: number, nom: string, description: string, dateReal: Date, position: number, realised: boolean, list: TrelloList | null | object) {
         this._id = id;
         this._nom = nom;
         this._description = description;
@@ -67,21 +67,23 @@ export class Card {
         this._realised = value;
     }
 
-    get list(): List {
+    get list(): TrelloList | null | object {
         return this._list;
     }
 
-    set list(value: List) {
+    set list(value: TrelloList | null | object) {
         this._list = value;
     }
 
     toBDD(): object {
+        //@ts-ignore
+        const idList = this.list ? this.list.id : null;
         return {
             nom: this.nom,
             description: this.description,
             dateReal: this.dateReal,
             realised: this.realised,
-            idList: this.list.id
+            idList: idList
         }
     }
 
