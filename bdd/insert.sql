@@ -1,0 +1,1 @@
+INSERT INTO Admin (log, mdp) VALUES ('admin', 'test');

@@ -66,12 +66,12 @@ export class UserDAO extends GlobalDAO{
             const user = result.rows[0];
             const isMatch = await bcrypt.compare(mdp, user.mdp);
             if (!isMatch) {
-                return null;
+                throw new Error("Password not match!");
             }
             return this.objectToClass(user);
         } catch (e) {
             console.error("Authentication error:", e);
-            return null;
+            throw e;
         } finally {
             client.release();
         }

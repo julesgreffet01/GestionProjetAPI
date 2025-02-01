@@ -10,12 +10,9 @@ export class AdminDAO extends GlobalDAO{
 
     async objectToClass(row: any): Promise<Admin> {
         return new Admin(
-            // @ts-ignore
-            row["id"],
-            // @ts-ignore
-            row["log"],
-            // @ts-ignore
-            row["mdp"]
+            row.id,
+            row.log,
+            row.mdp
         );
     }
 
@@ -33,12 +30,12 @@ export class AdminDAO extends GlobalDAO{
             const user = result.rows[0];
             const isMatch = await bcrypt.compare(mdp, user.mdp);
             if (!isMatch) {
-                return null;
+                throw new Error("Password not match!");
             }
             return this.objectToClass(user);
         } catch (e) {
             console.error("Authentication error:", e);
-            return null;
+            throw e;
         } finally {
             client.release();
         }

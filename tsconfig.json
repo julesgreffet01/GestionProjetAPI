@@ -6,6 +6,12 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": [
+    "src/**/*.ts" // Inclure tous les fichiers .ts dans src
+  ],
+  "exclude": [
+    "node_modules", "dist" // Exclure les fichiers dans dist et node_modules
+  ]
 }
