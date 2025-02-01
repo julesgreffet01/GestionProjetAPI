@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import connectDB from './Config/dbConfig';  // Assurez-vous du bon chemin vers votre fichier de configuration de la base de données
+import connectDB from './Config/dbConfig.js';  // Assurez-vous du bon chemin vers votre fichier de configuration de la base de données
 
 // Fonction pour vérifier et mettre à jour les mots de passe
 const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {

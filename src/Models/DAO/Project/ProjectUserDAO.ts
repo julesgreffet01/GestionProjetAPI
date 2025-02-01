@@ -1,5 +1,5 @@
-import {ProjectUser} from "../../BO/Project/ProjectUser";
-import connectDB from "../../../Config/dbConfig";
+import {ProjectUser} from "../../BO/Project/ProjectUser.js";
+import connectDB from "../../../Config/dbConfig.js";
 
 export class ProjectUserDAO {
 

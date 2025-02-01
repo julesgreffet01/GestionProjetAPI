@@ -1,6 +1,6 @@
-import {GlobalDAO} from "../GlobalDAO";
-import {ToDo} from "../../BO/ToDo/ToDo";
-import {ProjectDAO} from "../Project/ProjectDAO";
+import {GlobalDAO} from "../GlobalDAO.js";
+import {ToDo} from "../../BO/ToDo/ToDo.js";
+import {ProjectDAO} from "../Project/ProjectDAO.js";
 
 export class ToDoDAO extends GlobalDAO {
     getTableName(): string {

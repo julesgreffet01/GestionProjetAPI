@@ -1,6 +1,6 @@
-import {GlobalDAO} from "../GlobalDAO";
-import {Trello} from "../../BO/Trello/Trello";
-import {ProjectDAO} from "../Project/ProjectDAO";
+import {GlobalDAO} from "../GlobalDAO.js";
+import {Trello} from "../../BO/Trello/Trello.js";
+import {ProjectDAO} from "../Project/ProjectDAO.js";
 
 export class TrelloDAO extends GlobalDAO{
     getTableName(): string {

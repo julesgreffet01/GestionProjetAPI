@@ -1,4 +1,4 @@
-import connectDB from "../../Config/dbConfig";
+import connectDB from "../../Config/dbConfig.js";
 
 export abstract class GlobalDAO {
 
@@ -16,7 +16,7 @@ export abstract class GlobalDAO {
             console.error("Error fetching all data:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -31,7 +31,7 @@ export abstract class GlobalDAO {
             console.error("Error fetching all data (force):", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -49,7 +49,7 @@ export abstract class GlobalDAO {
             console.error("Error fetching record:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -74,7 +74,7 @@ export abstract class GlobalDAO {
             console.error("Error creating record:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -98,7 +98,7 @@ export abstract class GlobalDAO {
             console.error("Error updating record:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -122,7 +122,7 @@ export abstract class GlobalDAO {
             console.error("Error in soft delete:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 
@@ -139,7 +139,7 @@ export abstract class GlobalDAO {
             console.error("Error in delete:", error);
             throw error;
         } finally {
-            client.release();
+            if(client) client.release();
         }
     }
 }

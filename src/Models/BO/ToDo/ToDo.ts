@@ -1,4 +1,4 @@
-import {Project} from "../Project/Project";
+import {Project} from "../Project/Project.js";
 
 export class ToDo {
     private _id: number;

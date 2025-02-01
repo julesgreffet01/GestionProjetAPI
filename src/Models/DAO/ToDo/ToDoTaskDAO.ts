@@ -1,8 +1,8 @@
-import {GlobalDAO} from "../GlobalDAO";
-import {ToDoTask} from "../../BO/ToDo/ToDoTask";
-import {UserDAO} from "../UserDAO";
-import {ToDoDAO} from "./ToDoDAO";
-import {ToDoTaskUserDAO} from "./ToDoTaskUserDAO";
+import {GlobalDAO} from "../GlobalDAO.js";
+import {ToDoTask} from "../../BO/ToDo/ToDoTask.js";
+import {UserDAO} from "../UserDAO.js";
+import {ToDoDAO} from "./ToDoDAO.js";
+import {ToDoTaskUserDAO} from "./ToDoTaskUserDAO.js";
 
 
 export class ToDoTaskDAO extends GlobalDAO {

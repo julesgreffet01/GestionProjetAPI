@@ -1,11 +1,11 @@
-import {GlobalDAO} from "./GlobalDAO";
-import {User} from "../BO/User";
-import {ProjectUser} from "../BO/Project/ProjectUser";
-import connectDB from "../../Config/dbConfig";
-import {ProjectUserDAO} from "./Project/ProjectUserDAO";
+import {GlobalDAO} from "./GlobalDAO.js";
+import {User} from "../BO/User.js";
+import {ProjectUser} from "../BO/Project/ProjectUser.js";
+import connectDB from "../../Config/dbConfig.js";
+import {ProjectUserDAO} from "./Project/ProjectUserDAO.js";
 import bcrypt = require("bcrypt");
-import {TrelloCardDAO} from "./Trello/TrelloCardDAO";
-import {TrelloCard} from "../BO/Trello/TrelloCard";
+import {TrelloCardDAO} from "./Trello/TrelloCardDAO.js";
+import {TrelloCard} from "../BO/Trello/TrelloCard.js";
 
 export class UserDAO extends GlobalDAO{
     getTableName(): string {

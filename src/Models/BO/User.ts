@@ -1,5 +1,5 @@
-import {ToDoTask} from "./ToDo/ToDoTask";
-import {TrelloCard} from "./Trello/TrelloCard";
+import {ToDoTask} from "./ToDo/ToDoTask.js";
+import {TrelloCard} from "./Trello/TrelloCard.js";
 
 export class User {
     private _id: number;

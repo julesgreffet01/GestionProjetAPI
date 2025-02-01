@@ -1,4 +1,4 @@
-import {User} from "../User";
+import {User} from "../User.js";
 export class Project {
     private _id: number;
     private _nom: string;

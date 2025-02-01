@@ -1,5 +1,5 @@
-import {User} from "../User";
-import {ToDo} from "./ToDo";
+import {User} from "../User.js";
+import {ToDo} from "./ToDo.js";
 
 export class ToDoTask {
     private _id: number;

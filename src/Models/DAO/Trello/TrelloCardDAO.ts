@@ -1,7 +1,7 @@
-import {GlobalDAO} from "../GlobalDAO";
-import {TrelloCard} from "../../BO/Trello/TrelloCard";
-import {TrelloListDAO} from "./TrelloListDAO";
-import {TrelloCardUserDAO} from "./TrelloCardUserDAO";
+import {GlobalDAO} from "../GlobalDAO.js";
+import {TrelloCard} from "../../BO/Trello/TrelloCard.js";
+import {TrelloListDAO} from "./TrelloListDAO.js";
+import {TrelloCardUserDAO} from "./TrelloCardUserDAO.js";
 
 export class TrelloCardDAO extends GlobalDAO {
     getTableName(): string {

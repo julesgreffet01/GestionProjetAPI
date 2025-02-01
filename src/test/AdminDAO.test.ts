@@ -1,19 +1,17 @@
-import {AdminDAO} from "../Models/DAO/AdminDAO";
+import { expect } from "chai";
+import { AdminDAO } from "../Models/DAO/AdminDAO.js";
 
-describe("test du find", () => {
-    //test du find classique
+describe("🔍 Tests AdminDAO avec vraie base de données", () => {
 
-    //test du find avec null
+    it("✅ find(1) doit retourner un Admin", async () => {
+        const result = await AdminDAO.find(1);
+        expect(result).to.not.be.null;
+        expect(result).to.have.property("_id");
+    });
 
-    //test du find avec un id non existant
-});
-
-describe("test de l'auth", () => {
-    const adminDAO = new AdminDAO();
-    //test classique
-
-    //test mauvais log
-
-    //test mauvais mdp
+    it("✅ find(999) doit retourner null (Admin inexistant)", async () => {
+        const result = await AdminDAO.find(999);
+        expect(result).to.be.null;
+    });
 
 });

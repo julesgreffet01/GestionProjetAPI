@@ -1,4 +1,4 @@
-import connectDB from "../../../Config/dbConfig";
+import connectDB from "../../../Config/dbConfig.js";
 
 
 export class TrelloCardUserDAO {

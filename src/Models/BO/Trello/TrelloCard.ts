@@ -1,4 +1,4 @@
-import {TrelloList} from "./TrelloList";
+import {TrelloList} from "./TrelloList.js";
 
 export class TrelloCard {
     private _id: number;
