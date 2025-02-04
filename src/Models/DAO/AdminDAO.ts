@@ -1,4 +1,3 @@
-import {GlobalDAO} from "./GlobalDAO.js";
 import {Admin} from "../BO/Admin.js";
 import connectDB from "../../Config/dbConfig.js";
 import bcrypt = require("bcrypt");
