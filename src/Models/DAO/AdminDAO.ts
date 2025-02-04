@@ -3,7 +3,7 @@ import {Admin} from "../BO/Admin.js";
 import connectDB from "../../Config/dbConfig.js";
 import bcrypt = require("bcrypt");
 
-export class AdminDAO extends GlobalDAO{
+export class AdminDAO {
     getTableName(): string {
         return "Admin";
     }

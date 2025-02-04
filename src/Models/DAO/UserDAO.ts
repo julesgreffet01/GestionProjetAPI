@@ -75,6 +75,4 @@ export class UserDAO extends GlobalDAO{
             client.release();
         }
     }
-
-
 }

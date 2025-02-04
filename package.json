@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "nodemon --ext ts --exec ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "hashage": "node dist/Config/hashage.js"
+    "start": "node dist/server.js"
   },
   "private": true,
   "keywords": [],
