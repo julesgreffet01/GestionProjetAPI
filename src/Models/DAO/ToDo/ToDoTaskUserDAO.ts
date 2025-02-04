@@ -2,7 +2,7 @@ import connectDB from "../../../Config/dbConfig.js";
 
 export class ToDoTaskUserDAO {
 
-    static async getAllCardByUser(userId: number): Promise<number[]> {
+    static async getAllTaskByUser(userId: number): Promise<number[]> {
         const client = await connectDB();
         const query = `SELECT idTask FROM ToDoTasksUsers WHERE idUser = $1 AND del = FALSE`;
 

@@ -6,6 +6,7 @@ import {ProjectUserDAO} from "./Project/ProjectUserDAO.js";
 import bcrypt = require("bcrypt");
 import {TrelloCardDAO} from "./Trello/TrelloCardDAO.js";
 import {TrelloCard} from "../BO/Trello/TrelloCard.js";
+import {ToDoTaskDAO} from "./ToDo/ToDoTaskDAO";
 
 export class UserDAO extends GlobalDAO{
     getTableName(): string {
@@ -26,22 +27,20 @@ export class UserDAO extends GlobalDAO{
         try {
             const user = await UserDAO.find(id);
             if (!user) return null;
+            if (user instanceof User) {
+                //all projets
+                let allProj: ProjectUser[] = await ProjectUserDAO.getAllByUser(id);
+                const newAllProj = allProj.map(({ idUser, ...rest }) => rest);
+                user.allProjects = newAllProj;
 
-            //all projets
-            let allProj: ProjectUser[] = await ProjectUserDAO.getAllByUser(id);
-            const newAllProj = allProj.map(({ idUser, ...rest }) => rest);
-            //@ts-ignore
-            user.allProjects = newAllProj;
+                //all Tasks
+                let allTask = await ToDoTaskDAO.getAllTasksByUser(id);
+                user.allTasks = allTask;
 
-            //all Tasks
-            //TODO a finir
-
-            //all cards
-            let allCards: TrelloCard[] = await TrelloCardDAO.getAllCardsByUser(id);
-            //@ts-ignore
-            user.allCards = allCards;
-
-
+                //all cards
+                let allCards: TrelloCard[] = await TrelloCardDAO.getAllCardsByUser(id);
+                user.allCards = allCards;
+            }
 
             return user;
         } catch (e) {

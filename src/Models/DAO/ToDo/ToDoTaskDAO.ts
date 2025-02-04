@@ -26,7 +26,7 @@ export class ToDoTaskDAO extends GlobalDAO {
     }
 
     static async getAllTasksByUser(userId: number): Promise<ToDoTask[]> {
-        const idArray = await ToDoTaskUserDAO.getAllCardByUser(userId);
+        const idArray = await ToDoTaskUserDAO.getAllTaskByUser(userId);
         const toDoTaskDAO = new ToDoTaskDAO();
 
         const rawTasks= await Promise.all(idArray.map(id => ToDoTaskDAO.find(id)))

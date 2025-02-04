@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';  // Importation d'Express avec les types Request et Response
 const dotenv = require('dotenv').config();
-import verifyAndHashPasswords from './hashage';
+import verifyAndHashPasswords from './Routes/hashage';
+import {lancementTest} from './Routes/test';
 
 
 const app = express();
@@ -11,9 +12,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Route pour lancer le processus de hachage des mots de passe
-app.post('/hash', (req: Request, res: Response) => {
+app.get('/hash', (req: Request, res: Response) => {
     verifyAndHashPasswords(req, res);  // Appeler la fonction de hashage
 });
+
+app.get('/test', async (req: Request, res: Response) => {
+    await lancementTest(res);
+})
 
 
 // Démarrer le serveur
