@@ -41,6 +41,24 @@ export abstract class GlobalDAO {
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
+            const query = `SELECT * FROM ${tableName} WHERE id = $1 AND del = FALSE LIMIT 1`;
+            const { rows } = await client.query(query, [id]);
+
+            return rows.length > 0 ? await this.prototype.objectToClass(rows[0]) : null;
+        } catch (error) {
+            console.error("Error fetching record:", error);
+            throw error;
+        } finally {
+            if(client) client.release();
+        }
+    }
+
+    static async forceFind(id: number): Promise<object | null> {
+        if (!id) throw new Error("Invalid ID");
+
+        const client = await connectDB();
+        try {
+            const tableName = this.prototype.getTableName();
             const query = `SELECT * FROM ${tableName} WHERE id = $1 LIMIT 1`;
             const { rows } = await client.query(query, [id]);
 
