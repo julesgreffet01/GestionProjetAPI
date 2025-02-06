@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 import {User} from "../Models/BO/User";
 import {UserDAO} from "../Models/DAO/UserDAO";
+import bcrypt from 'bcrypt';
 
 export class UserController {
 
@@ -109,7 +110,8 @@ export class UserController {
         try {
             const {log, mdp} = req.body;
             if(log && mdp) {
-                const user = new User(0, log, mdp, false);
+                const mdpHash = await bcrypt.hash(mdp, 10);
+                const user = new User(0, log, mdpHash, false);
                 const newUser = await UserDAO.create(user);
                 if(!newUser) {
                     res.status(500).json({message: "Create probleme"});
@@ -129,9 +131,11 @@ export class UserController {
 
     static async update(req: Request, res: Response) {
         try {
-            const {id, log, mdp, del} = req.body;
+            const id = parseInt(req.params.id);
+            const {log, mdp, del} = req.body;
             if(log && mdp && del && id) {
-                const user = new User(id, log, mdp, del);
+                const mdpHash = await bcrypt.hash(mdp, 10);
+                const user = new User(id, log, mdpHash, del);
                 const nbRow = await UserDAO.update(user);
                 if(!nbRow) {
                     res.status(401).json({message: "User not update"});
@@ -158,6 +162,7 @@ export class UserController {
                 if(!nbRow) {
                     res.status(401).json({message: "User probleme delete"});
                 } else if (nbRow >= 1){
+                    user.del = true;
                     res.status(200).json(user.toJson())
                 }
             } else {

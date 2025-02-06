@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/hash', (req: Request, res: Response) => {
     verifyAndHashPasswords(req, res);  // Appeler la fonction de hashage
 });
+
+// Routes pour les admins
 app.use('/admin', AdminRoutes);
 
 

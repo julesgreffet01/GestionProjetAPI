@@ -128,7 +128,7 @@ export abstract class GlobalDAO {
             const tableName = this.prototype.getTableName();
             let query: string;
 
-            if (data.del) {
+            if ('del' in data) {
                 query = `UPDATE ${tableName} SET del = TRUE WHERE id = $1`;
             } else {
                 query = `DELETE FROM ${tableName} WHERE id = $1`;
