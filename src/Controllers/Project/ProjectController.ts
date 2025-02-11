@@ -145,8 +145,7 @@ export class ProjectController {
                 if(!nbRow) {
                     res.status(404).json({error: 'probleme de delete'});
                 } else if (nbRow >= 1){
-                    project.del = true;
-                    res.status(200).json(project.toJson());
+                    res.status(200).json({message: 'delete du projet' + project.id});
                 }
             } else {
                 res.status(404).json({error: 'probleme de delete'});
