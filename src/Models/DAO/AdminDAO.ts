@@ -4,7 +4,7 @@ import bcrypt = require("bcrypt");
 
 export class AdminDAO {
     getTableName(): string {
-        return "Admin";
+        return `"Admin"`;
     }
 
     async objectToClass(row: any): Promise<Admin> {

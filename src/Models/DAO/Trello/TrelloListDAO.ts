@@ -4,7 +4,7 @@ import {TrelloDAO} from "./TrelloDAO.js";
 
 export class TrelloListDAO extends GlobalDAO{
     getTableName(): string {
-        return "TrelloLists";
+        return `"TrelloLists"`;
     }
     async objectToClass(row: any): Promise<TrelloList> {
         const trello= await TrelloDAO.find(row.id);

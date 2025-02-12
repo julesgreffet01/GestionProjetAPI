@@ -195,4 +195,17 @@ export class UserController {
             res.status(500).json({error: 'Erreur serveur.'});
         }
     }
+
+    static async restore(req: Request, res: Response) {
+        try {
+            const userId = parseInt(req.params.userId);
+            const user = await UserDAO.restore(userId);
+            if(!user) {
+                res.status(401).json({message: "User probleme restore"});
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur serveur.'});
+        }
+    }
 }

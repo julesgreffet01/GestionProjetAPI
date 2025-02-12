@@ -16,6 +16,7 @@ router.get('/:id', UserController.find);
 
 // create
 router.post('/', UserController.create);
+router.post('/restore/:userId', UserController.restore);
 
 // update
 router.put('/:id', UserController.update);

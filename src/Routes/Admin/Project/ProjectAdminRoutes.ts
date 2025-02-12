@@ -10,6 +10,7 @@ router.get('/force/:id', ProjectController.forceFind)
 router.get('/:id', ProjectController.find);
 
 router.post('/', ProjectController.create);
+router.post('/restore/:projectId', ProjectController.restore);
 
 router.put('/:id', ProjectController.update);
 

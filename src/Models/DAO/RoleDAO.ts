@@ -3,7 +3,7 @@ import {Role} from "../BO/Role";
 
 export class RoleDAO extends GlobalDAO {
     getTableName(): string {
-       return 'Roles';
+       return `"Roles"`;
     }
     async objectToClass(row: any): Promise<Role> {
         return new Role(

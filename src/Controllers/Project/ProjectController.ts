@@ -1,6 +1,7 @@
 import {Project} from "../../Models/BO/Project/Project";
 import {ProjectDAO} from "../../Models/DAO/Project/ProjectDAO";
 import { Request, Response } from 'express';
+import {UserDAO} from "../../Models/DAO/UserDAO";
 
 export class ProjectController {
 
@@ -64,12 +65,14 @@ export class ProjectController {
         try {
             const {nom, desc, idCreateur} = req.body;
             if(nom && desc && idCreateur){
-                const user = await ProjectDAO.find(idCreateur);
+                const user = await UserDAO.find(idCreateur);
                 if(!user){
                     res.status(404).json({error: 'bad User id'});
+                    return;
                 }
                 const project = new Project(0, nom, desc, false, user);
                 const newProject = await ProjectDAO.create(project);
+                console.log(newProject);
                 if(!newProject){
                     res.status(404).json({error: 'probleme de create'});
                 } else if (newProject instanceof Project){
@@ -94,6 +97,7 @@ export class ProjectController {
                 const user = await ProjectDAO.find(idCreateur);
                 if(!user){
                     res.status(404).json({error: 'bad user id'});
+                    return;
                 }
                 const project = new Project(id, nom, desc, del, user);
                 const nbRow = await ProjectDAO.update(project);
@@ -115,6 +119,7 @@ export class ProjectController {
             const project = await ProjectDAO.find(id);
             if(!project){
                 res.status(404).json({error: 'pas de projet'});
+                return;
             }
             if(project instanceof Project){
                 const nbRow = await ProjectDAO.softDelete(project);
@@ -139,6 +144,7 @@ export class ProjectController {
             const project = await ProjectDAO.find(id);
             if(!project){
                 res.status(404).json({error: 'pas de projet'});
+                return;
             }
             if(project instanceof Project){
                 const nbRow = await ProjectDAO.delete(project);
@@ -149,6 +155,19 @@ export class ProjectController {
                 }
             } else {
                 res.status(404).json({error: 'probleme de delete'});
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur serveur'});
+        }
+    }
+
+    static async restore(req: Request, res: Response) {
+        try {
+            const projectId = parseInt(req.params.projectId);
+            const project = await ProjectDAO.restore(projectId);
+            if(!project) {
+                res.status(401).json({message: "project probleme restore"});
             }
         } catch (e) {
             console.error(e);

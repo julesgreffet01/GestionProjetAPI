@@ -76,25 +76,25 @@ export abstract class GlobalDAO {
 
         const client = await connectDB();
         try {
-            const tableName = this.prototype.getTableName();
+            const tableName = `${this.prototype.getTableName()}`;
             const dataObject = data.toBDD();
 
-            const columns = Object.keys(dataObject).join(", ");
+            const columns = Object.keys(dataObject).map(col => `"${col}"`).join(", ");
             const placeholders = Object.keys(dataObject).map((_, i) => `$${i + 1}`).join(", ");
             const values = Object.values(dataObject);
 
-            const query = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders}) RETURNING id`;
+            const query = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders}) RETURNING *`;
             const result = await client.query(query, values);
 
-            data.id = result.rows[0].id;
-            return this.prototype.objectToClass(data);
+            return this.prototype.objectToClass(result.rows[0]);
         } catch (error) {
             console.error("Error creating record:", error);
             throw error;
         } finally {
-            if(client) client.release();
+            if (client) client.release();
         }
     }
+
 
     static async update(data: any): Promise<number | null> {
         if (typeof data.toBDD !== "function" || !data.id) throw new Error("Invalid data or missing ID");
@@ -105,7 +105,7 @@ export abstract class GlobalDAO {
             const dataObject = data.toBDD();
 
             const setClause = Object.keys(dataObject)
-                .map((key, index) => `${key} = $${index + 1}`)
+                .map((key, index) => `"${key}" = $${index + 1}`)
                 .join(", ");
             const values = [...Object.values(dataObject), data.id];
 
@@ -155,6 +155,22 @@ export abstract class GlobalDAO {
             return result.rowCount;
         } catch (error) {
             console.error("Error in delete:", error);
+            throw error;
+        } finally {
+            if(client) client.release();
+        }
+    }
+
+    static async restore(id: number): Promise<object | null> {
+
+        const client = await connectDB();
+        try {
+            const tableName = this.prototype.getTableName();
+            const query = `UPDATE ${tableName} SET del = FALSE WHERE id = $1 RETURNING *`;
+            const result = await client.query(query, [id]);
+            return this.prototype.objectToClass(result.rows[0]);
+        } catch (error) {
+            console.error("Error restoring restore:", error);
             throw error;
         } finally {
             if(client) client.release();

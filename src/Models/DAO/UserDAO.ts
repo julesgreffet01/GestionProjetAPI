@@ -10,7 +10,7 @@ import {ToDoTaskDAO} from "./ToDo/ToDoTaskDAO";
 
 export class UserDAO extends GlobalDAO{
     getTableName(): string {
-        return "Users";
+        return `"Users"`;
     }
     async objectToClass(row: any): Promise<User> {
        return new User(

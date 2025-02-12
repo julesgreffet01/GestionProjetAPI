@@ -4,7 +4,7 @@ import {ProjectDAO} from "../Project/ProjectDAO.js";
 
 export class ToDoDAO extends GlobalDAO {
     getTableName(): string {
-       return "ToDo";
+       return `"ToDo"`;
     }
     async objectToClass(row: any): Promise<ToDo> {
         const projet = await ProjectDAO.find(row.id);

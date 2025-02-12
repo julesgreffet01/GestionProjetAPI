@@ -7,7 +7,7 @@ import {ToDoTaskUserDAO} from "./ToDoTaskUserDAO.js";
 
 export class ToDoTaskDAO extends GlobalDAO {
     getTableName(): string {
-        return "ToDoTasks";
+        return `"ToDoTasks"`;
     }
     async objectToClass(row: any): Promise<ToDoTask> {
         const Realisateur = row.idRealisateur ? await UserDAO.find(row.idRealisateur) : null;
