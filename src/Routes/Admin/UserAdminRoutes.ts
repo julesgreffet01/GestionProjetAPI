@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import {UserController} from "../../Controllers/UserController";
+import {loginUnique} from "../../Middlewares/LoginUnique";
 
 // On commence par la route GET globale
 router.get('/', UserController.getAll);
@@ -15,7 +16,7 @@ router.get('/findComplet/:id', UserController.findComplet);
 router.get('/:id', UserController.find);
 
 // create
-router.post('/', UserController.create);
+router.post('/', loginUnique,UserController.create);
 router.post('/restore/:userId', UserController.restore);
 
 // update

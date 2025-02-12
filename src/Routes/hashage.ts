@@ -5,7 +5,7 @@ import connectDB from '../Config/dbConfig';  // Assurez-vous du bon chemin vers 
 const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {
     const client = await connectDB();  // Connexion à la base de données
     try {
-        const query = 'SELECT id, mdp FROM Admin';  // Modifier selon la structure de votre table Admin
+        const query = 'SELECT id, mdp FROM "Admin"';  // Modifier selon la structure de votre table Admin
         const result = await client.query(query);
 
         // Parcourir tous les utilisateurs
@@ -14,14 +14,14 @@ const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {
             if (!admin.mdp.startsWith('$2b$') && !admin.mdp.startsWith('$2a$')) {
                 console.log(`Hashing password for admin ID: ${admin.id}`);
                 const hashedPassword = await bcrypt.hash(admin.mdp, 10); // 10 est le nombre de "rounds" de hachage
-                const updateQuery = 'UPDATE Admin SET mdp = $1 WHERE id = $2';
+                const updateQuery = 'UPDATE "Admin" SET mdp = $1 WHERE id = $2';
                 await client.query(updateQuery, [hashedPassword, admin.id]);  // Mettre à jour le mot de passe haché
             } else {
                 console.log(`Password already hashed for admin ID: ${admin.id}`);
             }
         }
 
-        const query2 = 'SELECT id, mdp FROM Users';  // Modifier selon la structure de votre table Admin
+        const query2 = 'SELECT id, mdp FROM "Users"';  // Modifier selon la structure de votre table Admin
         const result2 = await client.query(query2);
 
         // Parcourir tous les utilisateurs
@@ -29,7 +29,7 @@ const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {
             if (!user.mdp.startsWith('$2b$') && !user.mdp.startsWith('$2a$')) {
                 console.log(`Hashing password for user ID: ${user.id}`);
                 const hashedPassword = await bcrypt.hash(user.mdp, 10);
-                const updateQuery = 'UPDATE Users SET mdp = $1 WHERE id = $2';
+                const updateQuery = 'UPDATE "Users" SET mdp = $1 WHERE id = $2';
                 await client.query(updateQuery, [hashedPassword, user.id]);
             } else {
                 console.log(`Password already hashed for user ID: ${user.id}`);

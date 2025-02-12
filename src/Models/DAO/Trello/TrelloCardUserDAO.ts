@@ -5,7 +5,7 @@ export class TrelloCardUserDAO {
 
     static async getAllCardByUser(userId: number): Promise<number[]> {
         const client = await connectDB();
-        const query = `SELECT idCard FROM TrelloCardUser WHERE idUser = $1 AND del = FALSE`;
+        const query = `SELECT "idCard" FROM "TrelloCardUser" WHERE "idUser" = $1 AND del = FALSE`;
 
         try {
             const result = await client.query(query, [userId]);

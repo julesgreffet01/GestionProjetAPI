@@ -5,7 +5,7 @@ export class ProjectUserDAO {
 
     static async getAllByUser(userId: number): Promise<ProjectUser[]> {
         const client = await connectDB();
-        const query = `SELECT * FROM ProjectUser WHERE idUser = $1 AND del = FALSE`;
+        const query = `SELECT * FROM "ProjectUser" WHERE "idUser" = $1 AND del = FALSE`;
 
         try {
             const result = await client.query(query, [userId]);
@@ -30,7 +30,7 @@ export class ProjectUserDAO {
 
     static async getAllByProject(projId: number): Promise<ProjectUser[]> {
         const client = await connectDB();
-        const query = `SELECT * FROM ProjectUser WHERE idProj = $1 AND del = FALSE`;
+        const query = `SELECT * FROM "ProjectUser" WHERE "idProj" = $1 AND del = FALSE`;
 
         try {
             const result = await client.query(query, [projId]);
@@ -54,7 +54,7 @@ export class ProjectUserDAO {
 
     static async find(userId: number, projId: number): Promise<ProjectUser | null> { // Retourne un seul objet ou null
         const client = await connectDB();
-        const query = "SELECT * FROM ProjectUser WHERE idUser = ? AND idProject = ? AND del = FALSE";
+        const query = `SELECT * FROM "ProjectUser" WHERE "idUser" = ? AND "idProject" = ? AND del = FALSE`;
 
         try {
             const result = await client.query(query, [userId, projId]);
@@ -82,7 +82,7 @@ export class ProjectUserDAO {
 
     static async delete(idUser: number, idProj: number): Promise<number | null> {
         const client = await connectDB();
-        const query = `DELETE FROM ProjectUser WHERE idUser = ${idUser} AND idProject = ${idProj}`;
+        const query = `DELETE FROM "ProjectUser" WHERE "idUser" = ${idUser} AND "idProject" = ${idProj}`;
 
         try {
             const result = await client.query(query);
@@ -100,7 +100,7 @@ export class ProjectUserDAO {
 
     static async create(projectUser: ProjectUser): Promise<ProjectUser | null> {
         const client = await connectDB();
-        const query = `INSERT INTO ProjectUser ('idUser', 'idProject', 'idRole') VALUES ($1, $2, $3)RETURNING *;`;
+        const query = `INSERT INTO "ProjectUser" ("idUser", "idProject", "idRole") VALUES ($1, $2, $3)RETURNING *;`;
         const values = [projectUser.idUser, projectUser.idProj, projectUser.idRole];
 
         try {
