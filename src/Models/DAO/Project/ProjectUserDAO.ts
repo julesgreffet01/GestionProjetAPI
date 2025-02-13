@@ -16,7 +16,7 @@ export class ProjectUserDAO {
 
             return result.rows.map(row => new ProjectUser(
                 row.idUser,
-                row.idProj,
+                row.idProject,
                 row.idRole,
                 row.del
             ));
@@ -30,7 +30,7 @@ export class ProjectUserDAO {
 
     static async getAllByProject(projId: number): Promise<ProjectUser[]> {
         const client = await connectDB();
-        const query = `SELECT * FROM "ProjectUser" WHERE "idProj" = $1 AND del = FALSE`;
+        const query = `SELECT * FROM "ProjectUser" WHERE "idProject" = $1 AND del = FALSE`;
 
         try {
             const result = await client.query(query, [projId]);
@@ -40,7 +40,7 @@ export class ProjectUserDAO {
 
             return result.rows.map(row => new ProjectUser(
                 row.idUser,
-                row.idProj,
+                row.idProject,
                 row.idRole,
                 row.del
             ));

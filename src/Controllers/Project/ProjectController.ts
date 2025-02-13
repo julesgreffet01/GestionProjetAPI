@@ -2,6 +2,8 @@ import {Project} from "../../Models/BO/Project/Project";
 import {ProjectDAO} from "../../Models/DAO/Project/ProjectDAO";
 import { Request, Response } from 'express';
 import {UserDAO} from "../../Models/DAO/UserDAO";
+import {ProjectUser} from "../../Models/BO/Project/ProjectUser";
+import {ProjectUserDAO} from "../../Models/DAO/Project/ProjectUserDAO";
 
 export class ProjectController {
 
@@ -72,10 +74,14 @@ export class ProjectController {
                 }
                 const project = new Project(0, nom, desc, false, user);
                 const newProject = await ProjectDAO.create(project);
-                console.log(newProject);
                 if(!newProject){
                     res.status(404).json({error: 'probleme de create'});
                 } else if (newProject instanceof Project){
+                    const relation = new ProjectUser(idCreateur, newProject.id, 1, false);
+                    const creaRela = await ProjectUserDAO.create(relation);
+                    if(!creaRela){
+                        res.status(404).json({error: 'probleme de create de relation'});
+                    }
                     res.status(200).json(newProject.toJson());
                 } else {
                     res.status(404).json({error: 'Erreur serveur.'});
@@ -105,6 +111,8 @@ export class ProjectController {
                     res.status(404).json({error: 'probleme de update'});
                 } else if (nbRow >= 1){
                     res.status(200).json(project.toJson());
+                } else {
+                    res.status(404).json({error: 'probleme de update'});
                 }
             }
         } catch (e) {

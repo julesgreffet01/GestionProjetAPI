@@ -15,7 +15,7 @@ router.get('/findComplet/:id', UserController.findComplet);
 // Ensuite la route qui prend un paramètre :id
 router.get('/:id', UserController.find);
 
-// create
+// post
 router.post('/', loginUnique,UserController.create);
 router.post('/restore/:userId', UserController.restore);
 

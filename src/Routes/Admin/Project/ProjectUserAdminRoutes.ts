@@ -4,7 +4,7 @@ import {ProjectUserController} from "../../../Controllers/Project/ProjectUserCon
 
 router.get('/user/:userId', ProjectUserController.getAllByUser);
 
-router.get('/proj/:projId', ProjectUserController.getAllByProj);
+router.get('/project/:projId', ProjectUserController.getAllByProj);
 
 router.post('/', ProjectUserController.create);
 

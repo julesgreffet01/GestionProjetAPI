@@ -202,6 +202,10 @@ export class UserController {
             const user = await UserDAO.restore(userId);
             if(!user) {
                 res.status(401).json({message: "User probleme restore"});
+            } else if(user instanceof User) {
+                res.status(200).json(user.toJson());
+            } else {
+                res.status(500).json({error: 'Erreur serveur.'});
             }
         } catch (e) {
             console.error(e);

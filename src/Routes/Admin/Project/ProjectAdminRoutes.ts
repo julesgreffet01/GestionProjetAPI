@@ -14,7 +14,7 @@ router.post('/restore/:projectId', ProjectController.restore);
 
 router.put('/:id', ProjectController.update);
 
-router.delete('/softDelete/:id', ProjectController.softDelete);
-router.delete('/:id', ProjectController.delete);
+router.delete('/:id', ProjectController.softDelete);
+router.delete('/force/:id', ProjectController.delete);
 
 export default router;
