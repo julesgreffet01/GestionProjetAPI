@@ -8,7 +8,6 @@ export class ProjectDAO extends GlobalDAO{
     }
     async objectToClass(row: any): Promise<Project> {
         const idCrea = parseInt(row.idCreateur);
-        console.log(idCrea);
 
         const creator = idCrea ? await UserDAO.find(idCrea) : null;
         return new Project(

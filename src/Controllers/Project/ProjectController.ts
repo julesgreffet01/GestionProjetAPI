@@ -100,7 +100,7 @@ export class ProjectController {
             const id = parseInt(req.params.id);
             const {nom, desc, del, idCreateur} = req.body;
             if(nom && desc && idCreateur && del){
-                const user = await ProjectDAO.find(idCreateur);
+                const user = await UserDAO.find(idCreateur);
                 if(!user){
                     res.status(404).json({error: 'bad user id'});
                     return;
@@ -109,11 +109,17 @@ export class ProjectController {
                 const nbRow = await ProjectDAO.update(project);
                 if(!nbRow) {
                     res.status(404).json({error: 'probleme de update'});
+                    return;
                 } else if (nbRow >= 1){
                     res.status(200).json(project.toJson());
+                    return;
                 } else {
                     res.status(404).json({error: 'probleme de update'});
+                    return;
                 }
+            } else {
+                res.status(400).json({error: 'Not all informations'});
+                return;
             }
         } catch (e) {
             console.error(e);
@@ -175,6 +181,11 @@ export class ProjectController {
             const projectId = parseInt(req.params.projectId);
             const project = await ProjectDAO.restore(projectId);
             if(!project) {
+                res.status(401).json({message: "project probleme restore"});
+                return;
+            } else if (project instanceof Project){
+                res.status(200).json(project.toJson());
+            } else {
                 res.status(401).json({message: "project probleme restore"});
             }
         } catch (e) {

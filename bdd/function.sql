@@ -76,7 +76,7 @@ CREATE OR REPLACE FUNCTION restore_del_for_project_relations() RETURNS trigger A
     UPDATE "ProjectUser" SET del = FALSE WHERE "idProject" = NEW.id AND "idUser" IN (SELECT id FROM "Users" WHERE del = FALSE);
 
     UPDATE "ToDoTasksUsers" SET del = FALSE WHERE "idTask" IN (SELECT id FROM "ToDoTasks" WHERE "idTodo" IN (SELECT id FROM "ToDo" WHERE "idProject" = NEW.id))
-                                            AND idUser IN (SELECT id FROM Users WHERE del = FALSE);
+                                            AND "idUser" IN (SELECT id FROM "Users" WHERE del = FALSE);
 
     UPDATE "TrelloCardUser" SET del = FALSE WHERE "idCard" IN (SELECT id FROM "TrelloCards" WHERE "idList" IN (SELECT id FROM "TrelloLists" WHERE "idTrello" IN (SELECT id FROM "Trello" WHERE "idProj" = NEW.id))) AND "idUser" IN (SELECT id FROM "Users" WHERE del = FALSE);
 
