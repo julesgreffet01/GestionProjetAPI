@@ -10,8 +10,9 @@ export class ToDoTask {
     private _dateReal: Date;
     private _realisateur: User | null | object;
     private _ToDo: ToDo | null | object;
+    private _del: boolean;
 
-    constructor(id: number, lib: string, ordre: number, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User | null | object, ToDo: ToDo | null | object) {
+    constructor(id: number, lib: string, ordre: number, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User | null | object, ToDo: ToDo | null | object, del: boolean) {
         this._id = id;
         this._lib = lib;
         this._ordre = ordre;
@@ -20,6 +21,7 @@ export class ToDoTask {
         this._dateReal = dateReal;
         this._realisateur = realisateur;
         this._ToDo = ToDo;
+        this._del = del;
     }
 
 
@@ -87,6 +89,14 @@ export class ToDoTask {
         this._ToDo = value;
     }
 
+    get del(): boolean {
+        return this._del;
+    }
+
+    set del(value: boolean) {
+        this._del = value;
+    }
+
     toBDD(): object {
         //@ts-ignore
         const idReal = this.realisateur ? this.realisateur.id : null;
@@ -99,7 +109,8 @@ export class ToDoTask {
             realised: this.realised,
             dateReal: this.dateReal,
             idRealisateur: idReal,
-            idTodo: idToDo
+            idTodo: idToDo,
+            del: this.del
         };
     }
 
@@ -113,7 +124,8 @@ export class ToDoTask {
             realised: this.realised,
             realisateur: this.realisateur,
             dateReal: this.dateReal,
-            ToDo: this.ToDo
+            ToDo: this.ToDo,
+            del: this.del,
         }
     }
 }

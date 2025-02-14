@@ -77,9 +77,145 @@ export class ToDoController {
 
     static async create(req: Request, res: Response) {
         try {
+            const {idProject, nom} = req.body;
+            if(idProject && nom){
+                const project = await ProjectDAO.find(idProject);
+                if(!project){
+                    res.status(404).json({error: 'No such project'});
+                    return;
+                }
+                const toDo = new ToDo(0, nom, false, project);
+                const newToDo = await ToDoDAO.create(toDo);
+                if (newToDo instanceof ToDo){
+                    res.status(200).json(newToDo.toJson());
+                    return;
+                } else {
+                    res.status(500).json({ error: 'Erreur serveur.' });
+                }
+            } else {
+                res.status(401).json({ error: 'not all informations.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
+    static async update(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
             const {idProject, nom, del} = req.body;
-            const project = await ProjectDAO.find(idProject);
-            const toDo = new ToDo(0, nom, del, project);
+            if(idProject && nom && del && id){
+                const project = await ProjectDAO.find(idProject);
+                if(!project){
+                    res.status(404).json({error: 'No such project'});
+                    return;
+                }
+                const toDo = new ToDo(id, nom, del, project);
+                const nbRow = await ToDoDAO.update(toDo);
+                if(!nbRow){
+                    res.status(404).json({error: 'No such project'});
+                    return;
+                } else if (nbRow >= 1) {
+                    res.status(200).json(toDo.toJson());
+                    return;
+                } else {
+                    res.status(500).json({ error: 'Erreur serveur.' });
+                    return;
+                }
+            } else {
+                res.status(404).json({ error: 'not all informations.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
+    static async softDelete(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            if(!id){
+                res.status(404).json({error: 'Probleme d id'});
+                return;
+            }
+            const toDo = await ToDoDAO.find(id);
+            if(!toDo){
+                res.status(404).json({error: 'pas de todo trouve'});
+                return;
+            } else if (toDo instanceof ToDo){
+                const nbRow = await ToDoDAO.softDelete(toDo);
+                if(!nbRow){
+                    res.status(404).json({error: 'No such project'});
+                    return;
+                } else if (nbRow >= 1){
+                    res.status(200).json(toDo.toJson());
+                    return;
+                } else {
+                    res.status(500).json({ error: 'Erreur serveur.' });
+                    return;
+                }
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
+    static async delete(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            if(!id){
+                res.status(404).json({error: 'Probleme d id'});
+                return;
+            }
+            const toDo = await ToDoDAO.find(id);
+            if(!toDo){
+                res.status(404).json({error: 'pas de todo trouve'});
+                return;
+            } else if (toDo instanceof ToDo){
+                const nbRow = await ToDoDAO.delete(toDo);
+                if(!nbRow){
+                    res.status(404).json({error: 'No such project'});
+                    return;
+                } else if (nbRow >= 1){
+                    toDo.del = true;
+                    res.status(200).json(toDo.toJson());
+                    return;
+                } else {
+                    res.status(500).json({ error: 'Erreur serveur.' });
+                    return;
+                }
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+                return;
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
+    static async restore(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            if(!id){
+                res.status(404).json({error: 'Probleme d id'});
+                return;
+            }
+            const toDo = await ToDoDAO.restore(id);
+            if(!toDo){
+                res.status(404).json({error: 'No such project'});
+                return;
+            } else if (toDo instanceof ToDo){
+                res.status(200).json(toDo.toJson());
+                return;
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+                return;
+            }
         } catch (e) {
             console.error(e);
             res.status(500).json({ error: 'Erreur serveur.' });
