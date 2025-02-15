@@ -28,8 +28,8 @@ export class ToDoTaskDAO extends GlobalDAO {
         )
     }
 
-    static async getAllTasksByUser(userId: number): Promise<ToDoTask[]> {
-        const idArray = await ToDoTaskUserDAO.getAllTaskByUser(userId);
+    static async getIdTasksByUser(userId: number): Promise<ToDoTask[]> {
+        const idArray = await ToDoTaskUserDAO.getIdTaskByUser(userId);
         const toDoTaskDAO = new ToDoTaskDAO();
 
         const rawTasks= await Promise.all(idArray.map(id => ToDoTaskDAO.find(id)))
@@ -39,24 +39,6 @@ export class ToDoTaskDAO extends GlobalDAO {
         return await Promise.all(validTasks.map(async (row) => {
             return await toDoTaskDAO.objectToClass(row);
         }));
-    }
-
-    static async updateOrder(orderMapping: any): Promise<void> {
-        const client = await connectDB();
-        try {
-            const tableName = this.prototype.getTableName();
-
-            for (const [id, ordre] of Object.entries(orderMapping)) {
-                const query = `UPDATE ${tableName} SET ordre = $1 WHERE id = $2 `;
-                await client.query(query, [ordre, id]);
-            }
-
-        } catch (error) {
-            console.error("Erreur lors de la mise à jour des ordres :", error);
-            throw error;
-        } finally {
-            if (client) client.release();
-        }
     }
 
     static async getAllByOrderByToDo(toDoId: number){
@@ -77,6 +59,28 @@ export class ToDoTaskDAO extends GlobalDAO {
         }
     }
 
+
+    static async updateOrder(orderMapping: any) {
+        const client = await connectDB();
+        try {
+            const tableName = this.prototype.getTableName();
+
+            let rows = [];
+            for (const [id, ordre] of Object.entries(orderMapping)) {
+                const query = `UPDATE ${tableName} SET ordre = $1 WHERE id = $2 `;
+                const result = await client.query(query, [ordre, id]);
+                rows.push(result.rowCount);
+            }
+            return rows;
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour des ordres :", error);
+            throw error;
+        } finally {
+            if (client) client.release();
+        }
+    }
+
+
     static async realiser(taskId: number, rea: boolean) {
         const client = await connectDB();
         try {
@@ -93,13 +97,14 @@ export class ToDoTaskDAO extends GlobalDAO {
         }
     }
 
-    static async enCours(userId: number, bool: boolean): Promise<any[]> {
+    static async enCours(userId: number, bool: boolean): Promise<ToDoTask> {
         const client = await connectDB();
         try {
+            const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
             const query = `UPDATE ${tableName} SET "enCours" = $1 WHERE id = $2`;
             const result = await client.query(query, [bool, userId]);
-            return result.rows;
+            return  await toDoTaskDAO.objectToClass(result.rows[0]);
         }catch (error) {
             console.error("Erreur lors du enCours :", error);
             throw error;

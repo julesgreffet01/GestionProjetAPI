@@ -124,4 +124,18 @@ export class ProjectUserDAO {
             if (client) client.release();
         }
     }
+
+    static async update(projectUser: ProjectUser): Promise<number | null> {
+        const client = await connectDB();
+        const query = `UPDATE "ProjectUser" SET "idRole" = $1 WHERE "idUser" = $2 AND "idProject" = $3`;
+        try {
+            const result = await client.query(query, [projectUser.idRole, projectUser.idUser, projectUser.idProj]);
+            return result.rowCount;
+        } catch (error) {
+            console.error("Database error:", error);
+            throw error;
+        } finally {
+            if (client) client.release();
+        }
+    }
 }

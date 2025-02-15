@@ -6,20 +6,11 @@ import {ToDoDAO} from "../../Models/DAO/ToDo/ToDoDAO";
 
 export class ToDoTaskController {
 
-    static async getAll(req: Request, res: Response) {
-        try {
-            const tasks = await ToDoTaskDAO.getAll();
-            const tasksJson = tasks.map((task: any)=> task.toJson());
-            res.status(200).json(tasksJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur Serveur'});
-        }
-    }
 
-    static async forceGetAll(req: Request, res: Response) {
+    static async getAllByOrdre(req: Request, res: Response) {
         try {
-            const tasks = await ToDoTaskDAO.forceGetAll();
+            const idTodo = parseInt(req.params.idTodo);
+            const tasks = await ToDoTaskDAO.getAllByOrderByToDo(idTodo);
             const tasksJson = tasks.map((task: any)=> task.toJson());
             res.status(200).json(tasksJson);
         } catch (e) {
@@ -36,27 +27,6 @@ export class ToDoTaskController {
                 return;
             }
             const task = await ToDoTaskDAO.find(id);
-            if(!task){
-                res.status(404).json({error: 'No such ToDo'});
-            } else if (task instanceof ToDoTask) {
-                res.status(200).json(task.toJson());
-            } else {
-                res.status(500).json({error: 'Erreur Serveur'});
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur Serveur'});
-        }
-    }
-
-    static async forceFind(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            if(!id){
-                res.status(404).json({error: 'No such ID'});
-                return;
-            }
-            const task = await ToDoTaskDAO.forceFind(id);
             if(!task){
                 res.status(404).json({error: 'No such ToDo'});
             } else if (task instanceof ToDoTask) {
@@ -169,39 +139,6 @@ export class ToDoTaskController {
         }
     }
 
-    static async softDelete(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            if(!id){
-                res.status(404).json({error: 'Invalid ID'});
-                return;
-            }
-            const task = await ToDoTaskDAO.find(id);
-            if(!task){
-                res.status(404).json({error: 'Pas de todo a cet id'})
-                return;
-            } else if (task instanceof ToDoTask){
-                const nbRow = await ToDoTaskDAO.softDelete(task);
-                if(!nbRow){
-                    res.status(404).json({error: 'No such task'});
-                    return;
-                } else if (nbRow >= 1){
-                    task.del = true;
-                    res.status(200).json(task.toJson());
-                    return;
-                } else {
-                    res.status(500).json({ error: 'Erreur serveur.' });
-                    return;
-                }
-            } else {
-                res.status(500).json({error: 'Erreur Serveur'});
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur Serveur'});
-        }
-    }
-
     static async realiser(req: Request, res: Response) {
         try {
             const {real} = req.body;
@@ -217,6 +154,47 @@ export class ToDoTaskController {
                 res.status(200).json(task.toJson());
             } else {
                 res.status(500).json({error: 'Erreur Serveur'});
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur Serveur'});
+        }
+    }
+
+    static async enCours(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const { enCours } = req.body;
+            if(!enCours){
+                res.status(404).json({error: 'Not all informations'});
+                return;
+            }
+            const task = await ToDoTaskDAO.enCours(id, enCours);
+            if(task instanceof ToDoTask){
+                res.status(200).json(task.toJson());
+            } else {
+                res.status(500).json({error: 'Erreur Serveur'});
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur Serveur'});
+        }
+    }
+
+    static async updateOrder(req: Request, res: Response) {
+        try {
+            const {ordre} = req.body;
+            if(typeof ordre === 'object' && ordre !== null) {
+                const nbRows = await ToDoTaskDAO.updateOrder(ordre);
+                if(!nbRows){
+                    res.status(404).json({error: 'probleme update order'});
+                } else if (nbRows.length > 0){
+                    res.status(200).json({message: 'ok'})
+                } else {
+                    res.status(500).json({error: 'probleme update order'});
+                }
+            } else {
+                res.status(404).json({error: 'Not all information'});
             }
         } catch (e) {
             console.error(e);

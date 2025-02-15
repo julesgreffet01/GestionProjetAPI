@@ -10,10 +10,8 @@ export class ProjectUserController {
             if (isNaN(id)) {
                res.status(400).json({ error: "Invalid user ID" });
             }
-
             const projectUsers = await ProjectUserDAO.getAllByUser(id);
             res.json(projectUsers.map(projectUser => projectUser.toJson()));
-
         } catch (e) {
             console.error(e);
             res.status(500).json({ error: "Erreur serveur." });
@@ -38,7 +36,6 @@ export class ProjectUserController {
 
     static async create(req: Request, res: Response) {
         try {
-
             const {idUser, idProject, idRole} = req.body;
             if (idUser && idProject && idRole) {
                 const projectUser = new ProjectUser(idUser, idProject, idRole, false);
@@ -52,6 +49,31 @@ export class ProjectUserController {
                 }
             } else {
                 res.status(400).json({error: 'Not all informations'});
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur serveur.'});
+        }
+    }
+
+    static async update(req: Request, res: Response) {
+        try {
+            const projectId = parseInt(req.params.projectId);
+            const userId = parseInt(req.params.userId);
+            const  {idRole, del}  = req.body;
+            if(userId && projectId && idRole && del) {
+                const rela = new ProjectUser(userId, projectId, idRole, del);
+                const nbRow = await ProjectUserDAO.update(rela);
+                if(!nbRow) {
+                    res.status(404).json({error: 'probleme de update'});
+                    return;
+                } else if (nbRow >= 1){
+                    res.status(200).json(rela.toJson());
+                } else {
+                    res.status(500).json({error: 'Erreur serveur.'});
+                }
+            } else {
+                res.status(401).json({error: 'Not all informations'});
             }
         } catch (e) {
             console.error(e);

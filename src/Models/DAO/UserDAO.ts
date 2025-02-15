@@ -34,7 +34,7 @@ export class UserDAO extends GlobalDAO{
                 user.allProjects = newAllProj;
 
                 //all Tasks
-                let allTask = await ToDoTaskDAO.getAllTasksByUser(id);
+                let allTask = await ToDoTaskDAO.getIdTasksByUser(id);
                 user.allTasks = allTask;
 
                 //all cards
