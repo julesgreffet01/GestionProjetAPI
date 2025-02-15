@@ -22,7 +22,7 @@ export class ProjectDAO extends GlobalDAO{
 
     static async getProjectByTask(taskId: number) {
         const client = await connectDB();
-        const query = `SELECT * FROM "Projects" p JOIN "ToDo" t ON p.id = t."idProject" JOIN "ToDoTasks" tt ON t.id = tt."idTodo" 
+        const query = `SELECT p.* FROM "Projects" p JOIN "ToDo" t ON p.id = t."idProject" JOIN "ToDoTasks" tt ON t.id = tt."idTodo" 
             WHERE tt.id = $1 LIMIT 1 `;
         try {
             const result = await client.query(query, [taskId]);
