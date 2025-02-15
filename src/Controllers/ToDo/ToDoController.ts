@@ -27,6 +27,18 @@ export class ToDoController {
         }
     }
 
+    static async getAllByProject(req: Request, res: Response) {
+        try {
+            const { projectId } = req.body;
+            const toDos = await ToDoDAO.getAllByProject(projectId)
+            const toDosJson = toDos.map((todo)=> todo.toJson());
+            res.status(200).json(toDosJson);
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
     static async find(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);

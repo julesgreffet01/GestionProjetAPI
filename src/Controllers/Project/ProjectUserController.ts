@@ -20,7 +20,7 @@ export class ProjectUserController {
 
     static async getAllByProj(req: Request, res: Response) {
         try {
-            const id = parseInt(req.params.projId, 10);
+            const id = parseInt(req.params.projectId, 10);
             if (isNaN(id)) {
                 res.status(400).json({ error: "Invalid user ID" });
                 return;
@@ -84,7 +84,7 @@ export class ProjectUserController {
     static async delete(req: Request, res: Response) {
         try {
             const userId = parseInt(req.params.userId, 10);
-            const projId = parseInt(req.params.projId, 10);
+            const projId = parseInt(req.params.projectId, 10);
             const projectUser = await ProjectUserDAO.find(userId, projId);
             if(!projectUser){
                 res.status(404).json({error: 'probleme de projet'});

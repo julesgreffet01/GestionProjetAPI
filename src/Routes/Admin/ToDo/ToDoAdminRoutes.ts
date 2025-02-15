@@ -7,6 +7,8 @@ router.get('/', ToDoController.getAll);
 router.get('/force/', ToDoController.forceGetAll);
 router.get('/force/:id', ToDoController.forceFind);
 
+router.get('/project/:projectId', ToDoController.getAllByProject)
+
 router.get('/:id', ToDoController.find);
 
 router.post('/', ToDoController.create);
