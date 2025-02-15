@@ -51,10 +51,10 @@ export class UserDAO extends GlobalDAO{
         }
     }
 
-    async authentification(log: string, mdp: string): Promise<User | null> {
+    static async authentification(log: string, mdp: string): Promise<User | null> {
         const client = await connectDB();
         try {
-            const tableName = this.getTableName();
+            const tableName = this.prototype.getTableName();
 
             const query = `SELECT * FROM ${tableName} WHERE log = $1 LIMIT 1`;
             const result = await client.query(query, [log]);
@@ -67,13 +67,20 @@ export class UserDAO extends GlobalDAO{
             if (!isMatch) {
                 throw new Error("Password not match!");
             }
-            return this.objectToClass(user);
+            return this.prototype.objectToClass(user);
         } catch (e) {
             console.error("Authentication error:", e);
             throw e;
         } finally {
             client.release();
         }
+    }
+
+    static async getAllByProject(projId: number) {
+        const projectUsers = await ProjectUserDAO.getAllByProject(projId);
+        return await Promise.all(
+            projectUsers.map(async (row: ProjectUser) => UserDAO.find(row.idUser))
+        );
     }
 
     static async logUnique(log: string): Promise<boolean> {

@@ -12,8 +12,7 @@ export class UserController {
             const random = Math.random();
             const {log, mdp} = req.body;
             if (log && mdp) {
-                const userDAO = new UserDAO();
-                const user = await userDAO.authentification(log, mdp);
+                const user = await UserDAO.authentification(log, mdp);
                 if (!user) {
                     res.status(401).json({message: "User not found"});
                 } else if (user instanceof User) {

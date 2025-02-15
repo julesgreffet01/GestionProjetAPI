@@ -1,10 +1,11 @@
 import express from 'express';
 const router = express.Router();
 import {ToDoTaskUserController} from "../../../Controllers/ToDo/ToDoTaskUserController";
+import {verifUserInProject} from "../../../Middlewares/UserInProject";
 
 router.get('/:taskId', ToDoTaskUserController.getAllByTask);
 
-router.post('/', ToDoTaskUserController.create);
+router.post('/', verifUserInProject, ToDoTaskUserController.create);
 
 router.delete('/:userId/:taskId', ToDoTaskUserController.delete);
 

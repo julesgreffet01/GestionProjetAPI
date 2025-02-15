@@ -12,3 +12,5 @@ INSERT INTO "ProjectUser" ("idUser", "idProject", "idRole") VALUES (1, 1, 1), (2
 INSERT INTO "ToDo" (nom, "idProject") VALUES ('test ToDo', 1), ('test2 ToDo', 1);
 
 INSERT INTO "ToDoTasks" (lib, ordre, "dateReal", "idTodo") VALUES ('test task', 1, '2025-02-20', 1);
+
+INSERT INTO "ToDoTasksUsers" ("idUser", "idTask") VALUES (1, 1);
