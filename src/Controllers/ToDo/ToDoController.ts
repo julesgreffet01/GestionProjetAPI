@@ -117,7 +117,7 @@ export class ToDoController {
         try {
             const id = parseInt(req.params.id);
             const {idProject, nom, del} = req.body;
-            if(idProject && nom && del && id){
+            if(idProject && nom && del != null && id){
                 const project = await ProjectDAO.find(idProject);
                 if(!project){
                     res.status(404).json({error: 'No such project'});

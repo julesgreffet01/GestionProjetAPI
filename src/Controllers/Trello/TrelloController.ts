@@ -108,7 +108,7 @@ export class TrelloController {
         try {
             const id = parseInt(req.params.id);
             const {nom, projectId, del} = req.body;
-            if(nom && projectId && del){
+            if(nom && projectId && del != null){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){
                     res.status(401).json({ error: 'pas de projet' });

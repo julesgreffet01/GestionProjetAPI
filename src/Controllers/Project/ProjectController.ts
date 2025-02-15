@@ -99,7 +99,7 @@ export class ProjectController {
         try {
             const id = parseInt(req.params.id);
             const {nom, desc, del, idCreateur} = req.body;
-            if(nom && desc && idCreateur && del){
+            if(nom && desc && idCreateur){
                 const user = await UserDAO.find(idCreateur);
                 if(!user){
                     res.status(404).json({error: 'bad user id'});

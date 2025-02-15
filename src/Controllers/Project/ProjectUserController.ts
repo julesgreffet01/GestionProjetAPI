@@ -61,7 +61,7 @@ export class ProjectUserController {
             const projectId = parseInt(req.params.projectId);
             const userId = parseInt(req.params.userId);
             const  {idRole, del}  = req.body;
-            if(userId && projectId && idRole && del) {
+            if(userId && projectId && idRole) {
                 const rela = new ProjectUser(userId, projectId, idRole, del);
                 const nbRow = await ProjectUserDAO.update(rela);
                 if(!nbRow) {

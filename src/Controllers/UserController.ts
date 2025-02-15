@@ -132,7 +132,7 @@ export class UserController {
         try {
             const id = parseInt(req.params.id);
             const {log, mdp, del} = req.body;
-            if(log && mdp && del && id) {
+            if(log && mdp && del != null && id) {
                 const mdpHash = await bcrypt.hash(mdp, 10);
                 const user = new User(id, log, mdpHash, del);
                 const nbRow = await UserDAO.update(user);
