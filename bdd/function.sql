@@ -27,10 +27,12 @@ CREATE OR REPLACE FUNCTION restore_del_for_user_relations() RETURNS trigger AS $
 BEGIN
     UPDATE "ProjectUser" SET del = FALSE WHERE "idUser" = NEW.id AND "idProject" IN (SELECT id FROM "Projects" WHERE del = FALSE);
 
-    UPDATE "ToDoTasksUsers" SET del = FALSE WHERE "idUser" = NEW.id AND "idTask" IN (SELECT id FROM "ToDoTasks" WHERE del = FALSE);
+    UPDATE "ToDoTasksUsers" SET del = FALSE WHERE "idUser" = NEW.id AND "idTask" IN (SELECT tt.id FROM "ToDoTasks" tt
+        JOIN "ToDo" t ON tt."idTodo" = t.id JOIN "Projects" p ON t."idProject" = p.id WHERE t.del = FALSE AND p.del = FALSE);
 
-    UPDATE "TrelloCardUser" SET del = FALSE WHERE "idUser" = NEW.id AND "idCard" IN (SELECT id FROM "TrelloCards" WHERE "idList" IN
-           (SELECT id FROM "TrelloLists" WHERE "idTrello" IN (SELECT id FROM "Trello" WHERE "idProj" IN (SELECT id FROM "Projects" WHERE del = FALSE))));
+    UPDATE "TrelloCardUser" SET del = FALSE WHERE "idUser" = NEW.id AND "idCard" IN (SELECT tc.id FROM "TrelloCards" tc
+         JOIN "TrelloLists" tl ON tc."idList" = tl.id JOIN "Trello" t ON tl."idTrello" = t.id JOIN "Projects" p ON t."idProj" = p.id
+         WHERE tl.del = FALSE AND t.del = FALSE AND p.del = FALSE);
 
     UPDATE "ToDoTasks" SET "idRealisateur" = NEW.id WHERE "idRealisateur" IS NULL AND "idTodo" IN (SELECT id FROM "ToDo" WHERE del = FALSE);
 

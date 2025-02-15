@@ -7,7 +7,7 @@ export class ToDoDAO extends GlobalDAO {
        return `"ToDo"`;
     }
     async objectToClass(row: any): Promise<ToDo> {
-        const projet = await ProjectDAO.find(row.id);
+        const projet = await ProjectDAO.find(row.idProject);
         return new ToDo(
             row.id,
             row.nom,

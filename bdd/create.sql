@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS "ToDoTasks" (
     "idRealisateur" INTEGER,
     "idTodo" INTEGER NOT NULL,
     CONSTRAINT PK_ToDoTask PRIMARY KEY (id),
-    CONSTRAINT FK_ToDoTask_1 FOREIGN KEY ("idTodo") REFERENCES "ToDo" (id),
-    CONSTRAINT FK_ToDoTask_2 FOREIGN KEY ("idRealisateur") REFERENCES "Users" (id)
+    CONSTRAINT FK_ToDoTask_1 FOREIGN KEY ("idTodo") REFERENCES "ToDo" (id) ON DELETE CASCADE,
+    CONSTRAINT FK_ToDoTask_2 FOREIGN KEY ("idRealisateur") REFERENCES "Users" (id) ON DELETE SET NULL
     );
 
 

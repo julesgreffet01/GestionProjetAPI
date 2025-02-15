@@ -149,6 +149,7 @@ export class ToDoController {
                     res.status(404).json({error: 'No such project'});
                     return;
                 } else if (nbRow >= 1){
+                    toDo.del = true;
                     res.status(200).json(toDo.toJson());
                     return;
                 } else {
@@ -171,7 +172,7 @@ export class ToDoController {
                 res.status(404).json({error: 'Probleme d id'});
                 return;
             }
-            const toDo = await ToDoDAO.find(id);
+            const toDo = await ToDoDAO.forceFind(id);
             if(!toDo){
                 res.status(404).json({error: 'pas de todo trouve'});
                 return;
