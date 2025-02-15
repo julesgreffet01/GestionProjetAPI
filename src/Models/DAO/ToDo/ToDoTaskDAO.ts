@@ -23,8 +23,7 @@ export class ToDoTaskDAO extends GlobalDAO {
             row.realised,
             row.dateReal,
             Realisateur,
-            ToDo,
-            row.del
+            ToDo
         )
     }
 

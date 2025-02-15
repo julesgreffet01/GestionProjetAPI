@@ -51,7 +51,7 @@ export class ToDoTaskController {
                 }
                 const dateParse = new Date(dateReal);
                 const ordreInt = parseInt(ordre);
-                const task = new ToDoTask(0, lib, ordreInt, false, false, dateParse, null, toDo, false);
+                const task = new ToDoTask(0, lib, ordreInt, false, false, dateParse, null, toDo);
                 const newTask = await ToDoTaskDAO.create(task);
                 if(newTask instanceof ToDoTask){
                     res.status(200).json(newTask.toJson());
@@ -123,7 +123,6 @@ export class ToDoTaskController {
                     res.status(404).json({error: 'No such task'});
                     return;
                 } else if (nbRow >= 1){
-                    task.del = true;
                     res.status(200).json(task.toJson());
                     return;
                 } else {
