@@ -75,13 +75,13 @@ export class TrelloCardController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {nom, desc, dateReal, position, listId} = req.body;
+            const {nom, desc, dateReal, listId} = req.body;
             const list = await TrelloListDAO.find(listId);
             if(!list){
                 res.status(404).json({ error: 'list not found' });
                 return;
             }
-            const card = new TrelloCard(0, nom, desc, dateReal, position, false, list);
+            const card = new TrelloCard(0, nom, desc, dateReal, null, false, list);
             const newCard = await TrelloCardDAO.create(card);
             if(newCard instanceof TrelloCard){
                 res.status(200).json(newCard.toJson());
@@ -135,10 +135,27 @@ export class TrelloCardController {
         }
     }
 
+    static async restore(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const newCard = await TrelloCardDAO.restore(id);
+            if(!newCard){
+                res.status(404).json({ error: 'Trello not found' });
+            } else if (newCard instanceof TrelloCard ){
+                res.status(200).json(newCard.toJson());
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
     static async delete(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const card = await TrelloCardDAO.find(id);
+            const card = await TrelloCardDAO.forceFind(id);
             if(!card){
                 res.status(404).json({ error: 'card not found' });
             } else if(card instanceof TrelloCard){

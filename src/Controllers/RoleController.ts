@@ -7,7 +7,7 @@ export class RoleController {
     static async getAll(req: Request, res: Response) {
         try {
             const roles = await RoleDAO.getAll();
-            const roleJson = roles.map((role: any) => role.toJSON());
+            const roleJson = roles.map((role: any) => role.toJson());
             res.status(200).json(roleJson);
         } catch (e) {
             console.error(e);
@@ -18,7 +18,7 @@ export class RoleController {
     static async forceGetAll(req: Request, res: Response) {
         try {
             const roles = await RoleDAO.forceGetAll();
-            const roleJson = roles.map((role: any) => role.toJSON());
+            const roleJson = roles.map((role: any) => role.toJson());
             res.status(200).json(roleJson);
         } catch (e) {
             console.error(e);
@@ -79,8 +79,8 @@ export class RoleController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, del} = req.body;
-            const role = new Role(id, nom, del);
+            const {nom} = req.body;
+            const role = new Role(id, nom, false);
             const nbRow = await RoleDAO.update(role);
             if(!nbRow) {
                 res.status(404).json({ error: 'No such role.' });
@@ -95,10 +95,34 @@ export class RoleController {
         }
     }
 
+    static async restore(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const role = await RoleDAO.find(id);
+            if(!role) {
+                res.status(404).json({ error: 'No such role.' });
+            } else if(role instanceof Role) {
+                const newRole = await RoleDAO.restore(id);
+                if(!newRole){
+                    res.status(404).json({ error: 'No such role.' });
+                } else if(newRole instanceof Role) {
+                    res.status(200).json(newRole.toJson());
+                } else {
+                    res.status(500).json({ error: 'Erreur serveur.' });
+                }
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
     static async delete(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const role  = await RoleDAO.find(id);
+            const role  = await RoleDAO.forceFind(id);
             if(!role) {
                 res.status(404).json({ error: 'No such role.' });
             } else if(role instanceof Role) {

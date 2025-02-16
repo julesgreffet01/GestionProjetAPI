@@ -13,6 +13,7 @@ router.get('/:id', TrelloCardController.find)
 
 router.post('/', TrelloCardController.create);
 router.post('/position/', TrelloCardController.updatePosition);
+router.post('/restore/:id', TrelloCardController.restore);
 
 router.put('/:id', TrelloCardController.update);
 

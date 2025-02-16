@@ -4,14 +4,14 @@ import {ToDo} from "./ToDo.js";
 export class ToDoTask {
     private _id: number;
     private _lib: string;
-    private _ordre: number;
+    private _ordre: number| null;
     private _enCours: boolean;
     private _realised: boolean;
     private _dateReal: Date;
     private _realisateur: User | null | object;
     private _ToDo: ToDo | null | object;
 
-    constructor(id: number, lib: string, ordre: number, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User | null | object, ToDo: ToDo | null | object) {
+    constructor(id: number, lib: string, ordre: number| null, enCours: boolean, realised: boolean, dateReal: Date, realisateur: User | null | object, ToDo: ToDo | null | object) {
         this._id = id;
         this._lib = lib;
         this._ordre = ordre;
@@ -39,11 +39,11 @@ export class ToDoTask {
         this._lib = value;
     }
 
-    get ordre(): number {
+    get ordre(): number| null {
         return this._ordre;
     }
 
-    set ordre(value: number) {
+    set ordre(value: number| null) {
         this._ordre = value;
     }
 

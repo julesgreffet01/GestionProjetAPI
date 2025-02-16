@@ -5,11 +5,11 @@ export class TrelloCard {
     private _nom: string;
     private _description: string;
     private _dateReal: Date;
-    private _position: number;
+    private _position: number | null;
     private _realised: boolean;
     private _list: TrelloList | null | object;
 
-    constructor(id: number, nom: string, description: string, dateReal: Date, position: number, realised: boolean, list: TrelloList | null | object) {
+    constructor(id: number, nom: string, description: string, dateReal: Date, position: number| null, realised: boolean, list: TrelloList | null | object) {
         this._id = id;
         this._nom = nom;
         this._description = description;
@@ -51,11 +51,11 @@ export class TrelloCard {
         this._dateReal = value;
     }
 
-    get position(): number {
+    get position(): number| null {
         return this._position;
     }
 
-    set position(value: number) {
+    set position(value: number| null) {
         this._position = value;
     }
 

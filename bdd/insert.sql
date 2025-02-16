@@ -30,4 +30,4 @@ INSERT INTO "TrelloLists" (nom, position, "idTrello") VALUES ('testList', 1, 1),
 
 INSERT INTO "TrelloCards" (nom, description, "dateReal", position, "idList") VALUES ('testCard', 'desc card', '2025-02-20', 1, 1);
 
-INSERT INTO "TrelloCardUser" ("iduser", "idCard") VALUES (1,1);
+INSERT INTO "TrelloCardUser" ("idUser", "idCard") VALUES (1,1);

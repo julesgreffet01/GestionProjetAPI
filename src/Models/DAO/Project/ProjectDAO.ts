@@ -36,4 +36,22 @@ export class ProjectDAO extends GlobalDAO{
         }
     }
 
+    static async getProjectByCard(cardId: number) {
+        const client = await connectDB();
+        const query = `SELECT p.* FROM "Projects" p JOIN "Trello" t ON p.id = t."idProj" JOIN "TrelloLists" tl ON t.id = tl."idTrello"
+            JOIN "TrelloCards" tc ON tl.id = tc."idList" WHERE tc.id = $1 LIMIT 1;`;
+        try {
+            const result = await client.query(query, [cardId]);
+            console.log("Query result:", result.rows);
+
+            return result.rows.length > 0 ? this.prototype.objectToClass(result.rows[0]) : null;
+        } catch (error) {
+            console.error("Erreur lors de la récupération du projet :", error);
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+
 }

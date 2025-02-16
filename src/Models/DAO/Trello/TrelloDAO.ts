@@ -8,7 +8,7 @@ export class TrelloDAO extends GlobalDAO{
         return `"Trello"`;
     }
     async objectToClass(row: any): Promise<Trello> {
-        const projet = await  ProjectDAO.find(row.id);
+        const projet = await  ProjectDAO.find(row.idProj);
         return new Trello(
             row.id,
             row.nom,
@@ -20,9 +20,11 @@ export class TrelloDAO extends GlobalDAO{
     static async getAllByProject(projectId: number) {
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
-        const query = `SELECT * FROM ${tableName} WHERE "idProj" = ${projectId}`;
+        const query = `SELECT * FROM ${tableName} WHERE "idProj" = $1;`;
         try {
-            const result = await client.query(query);
+            const result = await client.query(query, [projectId]);
+            console.log(projectId);
+            console.log(result);
             return await Promise.all(result.rows.map((row)=> this.prototype.objectToClass(row)));
         } catch (e) {
             console.error("Authentication error:", e);

@@ -93,5 +93,49 @@ CREATE TRIGGER trigger_restore_del_projects
     EXECUTE FUNCTION restore_del_for_project_relations();
 
 
+--position
+
+CREATE OR REPLACE FUNCTION set_default_position_cards()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.position IS NULL THEN
+        NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloCards" WHERE "idList" = NEW."idList"), 0) + 1;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_set_default_ordre
+    BEFORE INSERT ON "TrelloCards"
+    FOR EACH ROW EXECUTE FUNCTION set_default_position_cards();
 
 
+CREATE OR REPLACE FUNCTION set_default_position_lists()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.position IS NULL THEN
+        NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloLists" WHERE "idTrello" = NEW."idTrello"), 0) + 1;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_set_default_ordre
+    BEFORE INSERT ON "TrelloLists"
+    FOR EACH ROW EXECUTE FUNCTION set_default_position_lists();
+
+
+
+CREATE OR REPLACE FUNCTION set_default_ordre_tasks()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ordre IS NULL THEN
+        NEW.ordre := COALESCE((SELECT MAX(ordre) FROM "ToDoTasks" WHERE "idTodo" = NEW."idTodo"), 0) + 1;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_set_default_ordre
+    BEFORE INSERT ON "ToDoTasks"
+    FOR EACH ROW EXECUTE FUNCTION set_default_ordre_tasks();

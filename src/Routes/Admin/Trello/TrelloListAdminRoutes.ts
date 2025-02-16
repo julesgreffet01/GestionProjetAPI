@@ -10,8 +10,11 @@ router.get ('/force/:id', TrelloListController.forceFind)
 
 router.get('/trello/:trelloId', TrelloListController.getAllByTrello)
 
+router.get('/:id', TrelloListController.find)
+
 router.post('/', TrelloListController.create);
 router.post('/position', TrelloListController.updatePosition);
+router.post('/restore/:id', TrelloListController.restore);
 
 router.put('/:id', TrelloListController.update)
 

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import {TrelloList} from "../../Models/BO/Trello/TrelloList";
 import {TrelloListDAO} from "../../Models/DAO/Trello/TrelloListDAO";
-import {TrelloDAO} from "../../Models/DAO/Trello/TrelloDAO";
 
 export class TrelloListController {
     static async getAll(req: Request, res: Response) {
@@ -76,14 +75,14 @@ export class TrelloListController {
 
     static async create (req: Request, res: Response) {
         try  {
-            const {nom, position, trelloId} = req.body;
-            if(nom && position && trelloId) {
-                const trello = await TrelloDAO.find(trelloId);
+            const {nom, trelloId} = req.body;
+            if(nom && trelloId) {
+                const trello = await TrelloListDAO.find(trelloId);
                 if(!trello) {
                     res.status(404).json({error: "Trello not found"});
                     return;
                 }
-                const list = new TrelloList(0, nom, position, false, trello);
+                const list = new TrelloList(0, nom, null, false, trello);
                 const newList = await TrelloListDAO.create(list);
                 if(newList instanceof TrelloList) {
                     res.status(200).json(newList.toJson());
@@ -102,14 +101,14 @@ export class TrelloListController {
     static async update (req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, position, trelloId, del} = req.body;
+            const {nom, position, trelloId} = req.body;
             if(nom && position && trelloId) {
-                const trello = await TrelloDAO.find(trelloId);
+                const trello = await TrelloListDAO.find(trelloId);
                 if(!trello) {
                     res.status(404).json({error: "Trello not found"});
                     return;
                 }
-                const list = new TrelloList(id, nom, position, del, trello);
+                const list = new TrelloList(id, nom, position, false, trello);
                 const nbRow = await TrelloListDAO.update(list);
                 if(!nbRow) {
                     res.status(404).json({error: "probleme de update"});
@@ -125,10 +124,27 @@ export class TrelloListController {
         }
     }
 
+    static async restore (req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const newList = await TrelloListDAO.restore(id);
+            if(!newList){
+                res.status(404).json({ error: 'Trello not found' });
+            } else if (newList instanceof TrelloList ) {
+                res.status(200).json(newList.toJson());
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
     static async delete (req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const list = await TrelloListDAO.find(id);
+            const list = await TrelloListDAO.forceFind(id);
             if(!list) {
                 res.status(404).json({error: "list not found"});
             } else if(list instanceof TrelloList) {
@@ -136,6 +152,7 @@ export class TrelloListController {
                 if(!nbRow) {
                     res.status(404).json({error: "probleme de delete"});
                 } else if (nbRow >= 1){
+                    list.del = true;
                     res.status(200).json(list.toJson())
                 } else {
                     res.status(500).json({error: "Erreur serveur"});
@@ -160,6 +177,7 @@ export class TrelloListController {
                 if(!nbRow) {
                     res.status(404).json({error: "probleme de delete"});
                 } else if (nbRow >= 1){
+                    list.del = true;
                     res.status(200).json(list.toJson())
                 } else {
                     res.status(500).json({error: "Erreur serveur"});

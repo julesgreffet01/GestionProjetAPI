@@ -12,6 +12,7 @@ router.get('/project/:projectId', TrelloController.getAllByProject)
 router.get('/:id', TrelloController.find)
 
 router.post('/', TrelloController.create);
+router.post('/restore/:id', TrelloController.restore);
 
 router.put('/:id', TrelloController.update);
 

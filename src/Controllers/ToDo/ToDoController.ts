@@ -116,14 +116,14 @@ export class ToDoController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {projectId, nom, del} = req.body;
-            if(projectId && nom && del != null && id){
+            const {projectId, nom} = req.body;
+            if(projectId && nom && id){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){
                     res.status(404).json({error: 'No such project'});
                     return;
                 }
-                const toDo = new ToDo(id, nom, del, project);
+                const toDo = new ToDo(id, nom, false, project);
                 const nbRow = await ToDoDAO.update(toDo);
                 if(!nbRow){
                     res.status(404).json({error: 'No such project'});

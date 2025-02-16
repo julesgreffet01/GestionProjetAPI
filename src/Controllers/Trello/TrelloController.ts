@@ -29,7 +29,7 @@ export class TrelloController {
 
     static async getAllByProject(req: Request, res: Response) {
         try {
-            const {projectId} = req.body;
+            const projectId = parseInt(req.params.projectId);
             const trellos = await TrelloDAO.getAllByProject(projectId);
             const trellosJson = trellos.map((trello: any) => trello.toJson());
             res.status(200).json(trellosJson);
@@ -107,14 +107,14 @@ export class TrelloController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, projectId, del} = req.body;
-            if(nom && projectId && del != null){
+            const {nom, projectId} = req.body;
+            if(nom && projectId){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){
                     res.status(401).json({ error: 'pas de projet' });
                     return;
                 }
-                const trello = new Trello(id, nom, del, project)
+                const trello = new Trello(id, nom, false, project)
                 const nbRow = await TrelloDAO.update(trello)
                 if(!nbRow){
                     res.status(404).json({ error: 'Trello not found' });
@@ -134,10 +134,27 @@ export class TrelloController {
         }
     }
 
+    static async restore(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const newTrello = await TrelloDAO.restore(id);
+            if(!newTrello){
+                res.status(404).json({ error: 'Trello not found' });
+            } else if (newTrello instanceof Trello ){
+                res.status(200).json(newTrello.toJson());
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
     static async delete(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const trello = await TrelloDAO.find(id);
+            const trello = await TrelloDAO.forceFind(id);
             if(!trello) {
                 res.status(404).json({ error: 'Trello not found' });
             } else if(trello instanceof Trello){
@@ -145,6 +162,7 @@ export class TrelloController {
                 if(!nbRow){
                     res.status(404).json({ error: 'probleme de delete' });
                 } else {
+                    trello.del = true;
                     res.status(200).json(trello.toJson());
                 }
             } else {
@@ -167,6 +185,7 @@ export class TrelloController {
                 if(!nbRow){
                     res.status(404).json({ error: 'probleme de delete' });
                 } else {
+                    trello.del = true;
                     res.status(200).json(trello.toJson());
                 }
             } else {

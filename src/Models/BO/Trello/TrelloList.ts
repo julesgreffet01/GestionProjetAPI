@@ -3,11 +3,11 @@ import {Trello} from './Trello.js';
 export class TrelloList {
     private _id: number;
     private _nom: string;
-    private _position: number;
+    private _position: number| null;
     private _del: boolean;
     private _Trello: Trello | null | object;
 
-    constructor(id: number, nom: string, position: number, del: boolean, Trello: Trello | null | object) {
+    constructor(id: number, nom: string, position: number| null, del: boolean, Trello: Trello | null | object) {
         this._id = id;
         this._nom = nom;
         this._position = position;
@@ -31,11 +31,11 @@ export class TrelloList {
         this._nom = value;
     }
 
-    get position(): number {
+    get position(): number| null {
         return this._position;
     }
 
-    set position(value: number) {
+    set position(value: number| null) {
         this._position = value;
     }
 

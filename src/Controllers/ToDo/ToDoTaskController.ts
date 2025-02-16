@@ -42,16 +42,15 @@ export class ToDoTaskController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {lib, ordre,dateReal, todoId } = req.body;
-            if(lib && ordre && todoId && dateReal){
+            const {lib, dateReal, todoId } = req.body;
+            if(lib && todoId && dateReal){
                 const toDo = await ToDoDAO.find(todoId);
                 if(!toDo){
                     res.status(404).json({error: 'No ToDo for this id'})
                     return;
                 }
                 const dateParse = new Date(dateReal);
-                const ordreInt = parseInt(ordre);
-                const task = new ToDoTask(0, lib, ordreInt, false, false, dateParse, null, toDo);
+                const task = new ToDoTask(0, lib, null, false, false, dateParse, null, toDo);
                 const newTask = await ToDoTaskDAO.create(task);
                 if(newTask instanceof ToDoTask){
                     res.status(200).json(newTask.toJson());
@@ -113,7 +112,7 @@ export class ToDoTaskController {
                 res.status(404).json({error: 'Invalid ID'});
                 return;
             }
-            const task = await ToDoTaskDAO.find(id);
+            const task = await ToDoTaskDAO.forceFind(id);
             if(!task){
                 res.status(404).json({error: 'Pas de todo a cet id'})
                 return;

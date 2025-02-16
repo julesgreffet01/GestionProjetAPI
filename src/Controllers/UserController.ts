@@ -131,10 +131,10 @@ export class UserController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {log, mdp, del} = req.body;
-            if(log && mdp && del != null && id) {
+            const {log, mdp} = req.body;
+            if(log && mdp && id) {
                 const mdpHash = await bcrypt.hash(mdp, 10);
-                const user = new User(id, log, mdpHash, del);
+                const user = new User(id, log, mdpHash, false);
                 const nbRow = await UserDAO.update(user);
                 if(!nbRow) {
                     res.status(401).json({message: "User not update"});
@@ -176,7 +176,7 @@ export class UserController {
     static async delete(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const user = await UserDAO.find(id);
+            const user = await UserDAO.forceFind(id);
             if(!user) {
                 res.status(401).json({message: "User not found"});
             } else if(user instanceof User) {

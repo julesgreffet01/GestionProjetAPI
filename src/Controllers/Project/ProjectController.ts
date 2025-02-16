@@ -98,14 +98,14 @@ export class ProjectController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, desc, del, createurId} = req.body;
+            const {nom, desc, createurId} = req.body;
             if(nom && desc && createurId){
                 const user = await UserDAO.find(createurId);
                 if(!user){
                     res.status(404).json({error: 'bad user id'});
                     return;
                 }
-                const project = new Project(id, nom, desc, del, user);
+                const project = new Project(id, nom, desc, false, user);
                 const nbRow = await ProjectDAO.update(project);
                 if(!nbRow) {
                     res.status(404).json({error: 'probleme de update'});
@@ -155,7 +155,7 @@ export class ProjectController {
     static async delete(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const project = await ProjectDAO.find(id);
+            const project = await ProjectDAO.forceFind(id);
             if(!project){
                 res.status(404).json({error: 'pas de projet'});
                 return;
