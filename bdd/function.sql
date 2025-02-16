@@ -93,14 +93,16 @@ CREATE TRIGGER trigger_restore_del_projects
     EXECUTE FUNCTION restore_del_for_project_relations();
 
 
+
+
 -- Trigger pour définir la position par défaut dans TrelloCards
 CREATE OR REPLACE FUNCTION set_default_position_cards()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.position IS NULL OR NEW.position = 0 THEN
         NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloCards" WHERE "idList" = NEW."idList"), 0) + 1;
-END IF;
-RETURN NEW;
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -115,8 +117,8 @@ RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.position IS NULL OR NEW.position = 0 THEN
         NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloLists" WHERE "idTrello" = NEW."idTrello"), 0) + 1;
-END IF;
-RETURN NEW;
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -131,8 +133,8 @@ RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.ordre IS NULL OR NEW.ordre = 0 THEN
         NEW.ordre := COALESCE((SELECT MAX(ordre) FROM "ToDoTasks" WHERE "idTodo" = NEW."idTodo"), 0) + 1;
-END IF;
-RETURN NEW;
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
