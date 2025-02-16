@@ -97,13 +97,13 @@ export class TrelloCardController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, desc, dateReal, position, realised, listId} = req.body;
+            const {nom, desc, dateReal, listId} = req.body;
             const list = await TrelloListDAO.find(listId);
             if(!list){
                 res.status(404).json({ error: 'list not found' });
                 return;
             }
-            const card = new TrelloCard(id, nom, desc, dateReal, position, realised, list);
+            const card = new TrelloCard(id, nom, desc, dateReal, null, false, list);
             const nbRow = await TrelloCardDAO.update(card);
             if(!nbRow){
                 res.status(404).json({ error: 'probleme update' });

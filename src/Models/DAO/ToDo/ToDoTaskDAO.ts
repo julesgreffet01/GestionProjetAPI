@@ -4,7 +4,6 @@ import {UserDAO} from "../UserDAO.js";
 import {ToDoDAO} from "./ToDoDAO.js";
 import {ToDoTaskUserDAO} from "./ToDoTaskUserDAO.js";
 import connectDB from "../../../Config/dbConfig";
-import {ToDo} from "../../BO/ToDo/ToDo";
 
 
 export class ToDoTaskDAO extends GlobalDAO {
@@ -31,14 +30,27 @@ export class ToDoTaskDAO extends GlobalDAO {
         const idArray = await ToDoTaskUserDAO.getIdTaskByUser(userId);
         const toDoTaskDAO = new ToDoTaskDAO();
 
-        const rawTasks= await Promise.all(idArray.map(id => ToDoTaskDAO.find(id)))
+        // Récupération des tâches brutes
+        const rawTasks = await Promise.all(idArray.map(id => ToDoTaskDAO.find(id)));
 
+        // Filtrage des tâches valides (exclure les valeurs null)
         const validTasks = rawTasks.filter(task => task !== null);
 
-        return await Promise.all(validTasks.map(async (row) => {
-            return await toDoTaskDAO.objectToClass(row);
-        }));
+        // Retourner des instances valides de ToDoTask
+        return validTasks.map((row: any) =>
+            new ToDoTask(
+                row.id,
+                row.lib,
+                row.ordre,
+                row.enCours,
+                row.realised,
+                row.dateReal,
+                row.realisateur,
+                row.ToDo
+            )
+        );
     }
+
 
     static async getAllByOrderByToDo(toDoId: number){
         const client = await connectDB();

@@ -74,15 +74,14 @@ export class ToDoTaskController {
                 res.status(404).json({error: 'No such ID'});
                 return;
             }
-            const {lib, ordre,dateReal} = req.body;
-            if(lib && ordre && dateReal){
+            const {lib,dateReal} = req.body;
+            if(lib &&  dateReal){
                 const task = await ToDoTaskDAO.find(id);
                 if(!task){
                     res.status(404).json({error: 'No task for this id'})
                     return;
                 } else if(task instanceof ToDoTask){
                     task.lib = lib;
-                    task.ordre = ordre;
                     task.dateReal = dateReal;
                     const nbRow = await ToDoTaskDAO.update(task);
                     if(!nbRow){

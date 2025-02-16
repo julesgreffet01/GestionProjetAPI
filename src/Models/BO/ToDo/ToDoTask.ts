@@ -95,9 +95,6 @@ export class ToDoTask {
         const idToDo = this.ToDo ? this.ToDo.id : null;
         return {
             lib: this.lib,
-            ordre: this.ordre,
-            enCours: this.enCours,
-            realised: this.realised,
             dateReal: this.dateReal,
             idRealisateur: idReal,
             idTodo: idToDo

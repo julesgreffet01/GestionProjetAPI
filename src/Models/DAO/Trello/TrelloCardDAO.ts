@@ -9,12 +9,12 @@ export class TrelloCardDAO extends GlobalDAO {
         return `"TrelloCards"`;
     }
     async objectToClass(row: any): Promise<TrelloCard> {
-        const list: Promise<object | null> = TrelloListDAO.find(row.idList);
+        const list = await TrelloListDAO.find(row.idList);
         return new TrelloCard(
            row.id,
            row.nom,
            row.description,
-           row.dateReal,
+           new Date(row.dateReal),
            row.position,
            row.realised,
            list
@@ -23,18 +23,22 @@ export class TrelloCardDAO extends GlobalDAO {
 
     static async getAllCardsByUser(userId: number): Promise<TrelloCard[]> {
         const idArray: number[] = await TrelloCardUserDAO.getAllCardByUser(userId);
-        const trelloCardDAO = new TrelloCardDAO();
-
-        const rawCards = await Promise.all(
-            idArray.map(id => TrelloCardDAO.find(id))
-        );
-
+        const rawCards = await Promise.all(idArray.map(id => TrelloCardDAO.find(id)));
         const validRawCards = rawCards.filter(card => card !== null);
-
-        return await Promise.all(validRawCards.map(async (row) => {
-            return await trelloCardDAO.objectToClass(row);
-        }));
+        return validRawCards.map((row: any) =>
+            new TrelloCard(
+                row.id,
+                row.nom,
+                row.description,
+                new Date(row.dateReal),
+                row.position,
+                row.realised,
+                row.list
+            )
+        );
     }
+
+
 
     static async getAllByListAndPosition(listId: number): Promise<TrelloCard[]> {
         const client = await connectDB();

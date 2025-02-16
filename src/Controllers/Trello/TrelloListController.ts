@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {TrelloList} from "../../Models/BO/Trello/TrelloList";
 import {TrelloListDAO} from "../../Models/DAO/Trello/TrelloListDAO";
+import {TrelloDAO} from "../../Models/DAO/Trello/TrelloDAO";
 
 export class TrelloListController {
     static async getAll(req: Request, res: Response) {
@@ -77,7 +78,7 @@ export class TrelloListController {
         try  {
             const {nom, trelloId} = req.body;
             if(nom && trelloId) {
-                const trello = await TrelloListDAO.find(trelloId);
+                const trello = await TrelloDAO.find(trelloId);
                 if(!trello) {
                     res.status(404).json({error: "Trello not found"});
                     return;
@@ -101,14 +102,14 @@ export class TrelloListController {
     static async update (req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, position, trelloId} = req.body;
-            if(nom && position && trelloId) {
-                const trello = await TrelloListDAO.find(trelloId);
+            const {nom, trelloId} = req.body;
+            if(nom && trelloId) {
+                const trello = await TrelloDAO.find(trelloId);
                 if(!trello) {
                     res.status(404).json({error: "Trello not found"});
                     return;
                 }
-                const list = new TrelloList(id, nom, position, false, trello);
+                const list = new TrelloList(id, nom, null, false, trello);
                 const nbRow = await TrelloListDAO.update(list);
                 if(!nbRow) {
                     res.status(404).json({error: "probleme de update"});
@@ -117,6 +118,8 @@ export class TrelloListController {
                 } else {
                     res.status(500).json({error: "Erreur serveur"});
                 }
+            } else {
+                res.status(401).json({error: "not all infos"});
             }
         } catch (e) {
             console.error(e);

@@ -26,7 +26,7 @@ INSERT INTO "ToDoTasksUsers" ("idUser", "idTask") VALUES (1, 1);
 
 INSERT INTO "Trello" (nom, "idProj") VALUES ('testTrello', 1), ('testTrello2', 2);
 
-INSERT INTO "TrelloLists" (nom, "idTrello") VALUES ('testList', 1, 1), ('testList2', 1);
+INSERT INTO "TrelloLists" (nom, "idTrello") VALUES ('testList', 1), ('testList2', 1);
 
 INSERT INTO "TrelloCards" (nom, description, "dateReal", "idList") VALUES ('testCard', 'desc card', '2025-02-20', 1);
 

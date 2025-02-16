@@ -60,7 +60,6 @@ export class TrelloList {
         const idTrello = this.Trello ? this.Trello.id : null;
         return {
             nom: this.nom,
-            position: this.position,
             idTrello: idTrello
         }
     }
