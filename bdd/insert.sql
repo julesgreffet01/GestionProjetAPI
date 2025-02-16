@@ -17,7 +17,7 @@ INSERT INTO "ProjectUser" ("idUser", "idProject", "idRole") VALUES (1, 1, 1), (2
 
 INSERT INTO "ToDo" (nom, "idProject") VALUES ('test ToDo', 1), ('test2 ToDo', 1);
 
-INSERT INTO "ToDoTasks" (lib, ordre, "dateReal", "idTodo") VALUES ('test task', 1, '2025-02-20', 1);
+INSERT INTO "ToDoTasks" (lib, "dateReal", "idTodo") VALUES ('test task', '2025-02-20', 1);
 
 INSERT INTO "ToDoTasksUsers" ("idUser", "idTask") VALUES (1, 1);
 
@@ -26,8 +26,8 @@ INSERT INTO "ToDoTasksUsers" ("idUser", "idTask") VALUES (1, 1);
 
 INSERT INTO "Trello" (nom, "idProj") VALUES ('testTrello', 1), ('testTrello2', 2);
 
-INSERT INTO "TrelloLists" (nom, position, "idTrello") VALUES ('testList', 1, 1), ('testList2', 2, 1);
+INSERT INTO "TrelloLists" (nom, "idTrello") VALUES ('testList', 1, 1), ('testList2', 1);
 
-INSERT INTO "TrelloCards" (nom, description, "dateReal", position, "idList") VALUES ('testCard', 'desc card', '2025-02-20', 1, 1);
+INSERT INTO "TrelloCards" (nom, description, "dateReal", "idList") VALUES ('testCard', 'desc card', '2025-02-20', 1);
 
 INSERT INTO "TrelloCardUser" ("idUser", "idCard") VALUES (1,1);
