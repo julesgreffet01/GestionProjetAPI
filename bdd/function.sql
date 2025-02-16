@@ -93,49 +93,49 @@ CREATE TRIGGER trigger_restore_del_projects
     EXECUTE FUNCTION restore_del_for_project_relations();
 
 
---position
-
+-- Trigger pour définir la position par défaut dans TrelloCards
 CREATE OR REPLACE FUNCTION set_default_position_cards()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.position IS NULL THEN
+    IF NEW.position IS NULL OR NEW.position = 0 THEN
         NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloCards" WHERE "idList" = NEW."idList"), 0) + 1;
-    END IF;
-    RETURN NEW;
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_set_default_ordre
+CREATE TRIGGER trigger_set_default_position_cards
     BEFORE INSERT ON "TrelloCards"
     FOR EACH ROW EXECUTE FUNCTION set_default_position_cards();
 
 
+-- Trigger pour définir la position par défaut dans TrelloLists
 CREATE OR REPLACE FUNCTION set_default_position_lists()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.position IS NULL THEN
+    IF NEW.position IS NULL OR NEW.position = 0 THEN
         NEW.position := COALESCE((SELECT MAX(position) FROM "TrelloLists" WHERE "idTrello" = NEW."idTrello"), 0) + 1;
-    END IF;
-    RETURN NEW;
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_set_default_ordre
+CREATE TRIGGER trigger_set_default_position_lists
     BEFORE INSERT ON "TrelloLists"
     FOR EACH ROW EXECUTE FUNCTION set_default_position_lists();
 
 
-
+-- Trigger pour définir l'ordre par défaut dans ToDoTasks
 CREATE OR REPLACE FUNCTION set_default_ordre_tasks()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.ordre IS NULL THEN
+    IF NEW.ordre IS NULL OR NEW.ordre = 0 THEN
         NEW.ordre := COALESCE((SELECT MAX(ordre) FROM "ToDoTasks" WHERE "idTodo" = NEW."idTodo"), 0) + 1;
-    END IF;
-    RETURN NEW;
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_set_default_ordre
+CREATE TRIGGER trigger_set_default_ordre_tasks
     BEFORE INSERT ON "ToDoTasks"
     FOR EACH ROW EXECUTE FUNCTION set_default_ordre_tasks();
