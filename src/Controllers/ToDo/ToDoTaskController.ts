@@ -138,13 +138,19 @@ export class ToDoTaskController {
 
     static async realiser(req: Request, res: Response) {
         try {
+            //ToDo changer cette fonction pour que ca mette aussi la personne qui l as realiser
             const {real} = req.body;
             const id = parseInt(req.params.id);
-            if(!real){
+            let task;
+            if(real != null){
                 res.status(404).json({error: 'Not all information'});
                 return;
+            } else if(real){
+                const {realisateurId} = req.body
+                 task = await ToDoTaskDAO.realiser(id, real, realisateurId);
+            } else {
+                 task = await ToDoTaskDAO.realiser(id, real);
             }
-            const task = await ToDoTaskDAO.realiser(id, real);
             if(!task){
                 res.status(404).json({error: 'No such task'});
             } else if(task instanceof ToDoTask){

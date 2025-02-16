@@ -92,13 +92,13 @@ export class ToDoTaskDAO extends GlobalDAO {
     }
 
 
-    static async realiser(taskId: number, rea: boolean) {
+    static async realiser(taskId: number, rea: boolean, idRealisateur: number | null = null) {
         const client = await connectDB();
         try {
             const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
-            const query = `UPDATE ${tableName} SET realised = $1 WHERE id = $2`;
-            const result = await client.query(query, [rea, taskId]);
+            const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $2`;
+            const result = await client.query(query, [rea, taskId, idRealisateur]);
             return  await toDoTaskDAO.objectToClass(result.rows[0]);
         } catch (error) {
             console.error("Erreur lors du realised :", error);
