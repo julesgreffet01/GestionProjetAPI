@@ -65,9 +65,9 @@ export class ProjectController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {nom, desc, idCreateur} = req.body;
-            if(nom && desc && idCreateur){
-                const user = await UserDAO.find(idCreateur);
+            const {nom, desc, createurId} = req.body;
+            if(nom && desc && createurId){
+                const user = await UserDAO.find(createurId);
                 if(!user){
                     res.status(404).json({error: 'bad User id'});
                     return;
@@ -77,7 +77,7 @@ export class ProjectController {
                 if(!newProject){
                     res.status(404).json({error: 'probleme de create'});
                 } else if (newProject instanceof Project){
-                    const relation = new ProjectUser(idCreateur, newProject.id, 1, false);
+                    const relation = new ProjectUser(createurId, newProject.id, 1, false);
                     const creaRela = await ProjectUserDAO.create(relation);
                     if(!creaRela){
                         res.status(404).json({error: 'probleme de create de relation'});
@@ -98,9 +98,9 @@ export class ProjectController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, desc, del, idCreateur} = req.body;
-            if(nom && desc && idCreateur){
-                const user = await UserDAO.find(idCreateur);
+            const {nom, desc, del, createurId} = req.body;
+            if(nom && desc && createurId){
+                const user = await UserDAO.find(createurId);
                 if(!user){
                     res.status(404).json({error: 'bad user id'});
                     return;

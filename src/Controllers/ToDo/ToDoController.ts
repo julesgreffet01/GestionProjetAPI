@@ -89,9 +89,9 @@ export class ToDoController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {idProject, nom} = req.body;
-            if(idProject && nom){
-                const project = await ProjectDAO.find(idProject);
+            const {projectId, nom} = req.body;
+            if(projectId && nom){
+                const project = await ProjectDAO.find(projectId);
                 if(!project){
                     res.status(404).json({error: 'No such project'});
                     return;
@@ -116,9 +116,9 @@ export class ToDoController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {idProject, nom, del} = req.body;
-            if(idProject && nom && del != null && id){
-                const project = await ProjectDAO.find(idProject);
+            const {projectId, nom, del} = req.body;
+            if(projectId && nom && del != null && id){
+                const project = await ProjectDAO.find(projectId);
                 if(!project){
                     res.status(404).json({error: 'No such project'});
                     return;

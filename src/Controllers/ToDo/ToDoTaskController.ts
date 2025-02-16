@@ -9,8 +9,8 @@ export class ToDoTaskController {
 
     static async getAllByOrdre(req: Request, res: Response) {
         try {
-            const idTodo = parseInt(req.params.idTodo);
-            const tasks = await ToDoTaskDAO.getAllByOrderByToDo(idTodo);
+            const todoId = parseInt(req.params.todoId);
+            const tasks = await ToDoTaskDAO.getAllByOrderByToDo(todoId);
             const tasksJson = tasks.map((task: any)=> task.toJson());
             res.status(200).json(tasksJson);
         } catch (e) {
@@ -42,9 +42,9 @@ export class ToDoTaskController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {lib, ordre,dateReal, idTodo } = req.body;
-            if(lib && ordre && idTodo && dateReal){
-                const toDo = await ToDoDAO.find(idTodo);
+            const {lib, ordre,dateReal, todoId } = req.body;
+            if(lib && ordre && todoId && dateReal){
+                const toDo = await ToDoDAO.find(todoId);
                 if(!toDo){
                     res.status(404).json({error: 'No ToDo for this id'})
                     return;
