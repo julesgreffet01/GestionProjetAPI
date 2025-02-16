@@ -138,7 +138,6 @@ export class ToDoTaskController {
 
     static async realiser(req: Request, res: Response) {
         try {
-            //ToDo changer cette fonction pour que ca mette aussi la personne qui l as realiser
             const {real} = req.body;
             const id = parseInt(req.params.id);
             let task;
