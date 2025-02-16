@@ -5,8 +5,8 @@ export class ToDoTaskUserDAO {
 
     static async getIdTaskByUser(userId: number): Promise<number[]> {
         const client = await connectDB();
-        //ToDo a ameliorer ou on enleve les realised
-        const query = `SELECT "idTask" FROM "ToDoTasksUsers" WHERE "idUser" = $1 AND del = FALSE`;
+        const query = `SELECT "idTask" FROM "ToDoTasksUsers" JOIN "ToDoTasks" ON "ToDoTasksUsers"."idTask" = "ToDoTasks"."id" 
+            WHERE "ToDoTasksUsers"."idUser" = $1 AND "ToDoTasksUsers".del = FALSE AND "ToDoTasks".realised = FALSE`;
 
         try {
             const result = await client.query(query, [userId]);
