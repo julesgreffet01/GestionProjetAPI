@@ -221,17 +221,15 @@ export class ToDoController {
             const toDo = await ToDoDAO.restore(id);
             if(!toDo){
                 res.status(404).json({error: 'No such project'});
-                return;
             } else if (toDo instanceof ToDo){
                 res.status(200).json(toDo.toJson());
-                return;
             } else {
                 res.status(500).json({ error: 'Erreur serveur.' });
-                return;
             }
         } catch (e) {
             console.error(e);
             res.status(500).json({ error: 'Erreur serveur.' });
         }
     }
+
 }
