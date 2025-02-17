@@ -30,7 +30,31 @@ export class ProjectUserDAO {
 
     static async getAllByProject(projId: number): Promise<ProjectUser[]> {
         const client = await connectDB();
-        const query = `SELECT * FROM "ProjectUser" WHERE "idProject" = $1 AND del = FALSE`;
+        const query = `SELECT pu.* FROM "ProjectUser" pu INNER JOIN "Projects" p ON pu."idProject" = p.id WHERE pu."idProject" = 1 AND p.del = FALSE;`;
+
+        try {
+            const result = await client.query(query, [projId]);
+            if (result.rows.length === 0) {
+                return [];
+            }
+
+            return result.rows.map(row => new ProjectUser(
+                row.idUser,
+                row.idProject,
+                row.idRole,
+                row.del
+            ));
+        } catch (error) {
+            console.error("Database error:", error);
+            throw error;
+        } finally {
+            if (client) client.release();
+        }
+    }
+
+    static async getAllByProjectNoCreateur(projId: number): Promise<ProjectUser[]> {
+        const client = await connectDB();
+        const query = `SELECT pu.* FROM "ProjectUser" pu INNER JOIN "Projects" p ON pu."idProject" = p.id WHERE pu."idProject" = 1 AND p.del = FALSE AND pu."idUser" != p."idCreateur";`;
 
         try {
             const result = await client.query(query, [projId]);

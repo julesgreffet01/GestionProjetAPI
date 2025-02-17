@@ -2,10 +2,8 @@ import express from 'express';
 const router = express.Router();
 import {ToDoController} from "../../../Controllers/ToDo/ToDoController";
 
-router.get('/', ToDoController.getAll);
 
 router.get('/force/', ToDoController.forceGetAll);
-router.get('/force/:id', ToDoController.forceFind);
 
 router.get('/project/:projectId', ToDoController.getAllByProject)
 

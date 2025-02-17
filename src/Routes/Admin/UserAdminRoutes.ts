@@ -3,8 +3,6 @@ const router = express.Router();
 import {UserController} from "../../Controllers/UserController";
 import {loginUnique} from "../../Middlewares/LoginUnique";
 
-// On commence par la route GET globale
-router.get('/', UserController.getAll);
 
 // On place les routes "force" avant la route générique :id
 router.get('/force', UserController.forceGetAll);

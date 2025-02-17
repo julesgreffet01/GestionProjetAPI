@@ -83,9 +83,9 @@ export class UserController {
         }
     }
 
-    static async getAll(req: Request, res: Response) {
+    static async forceGetAll(req: Request, res: Response) {
         try {
-            const users = await UserDAO.getAll();
+            const users = await UserDAO.forceGetAll();
             const usersJson = users.map((user: any) => user.toJson());
             res.status(200).json(usersJson);
         } catch (e) {
@@ -94,9 +94,10 @@ export class UserController {
         }
     }
 
-    static async forceGetAll(req: Request, res: Response) {
+    static async getAllByProject(req: Request, res: Response) {
         try {
-            const users = await UserDAO.forceGetAll();
+            const projectId = parseInt(req.params.projectId);
+            const users = await UserDAO.getAllByProject(projectId);
             const usersJson = users.map((user: any) => user.toJson());
             res.status(200).json(usersJson);
         } catch (e) {

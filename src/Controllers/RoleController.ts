@@ -26,23 +26,6 @@ export class RoleController {
         }
     }
 
-    static async find(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const role = await RoleDAO.find(id);
-            if(!role) {
-                res.status(404).json({ error: 'No such role.' });
-            } else if(role instanceof Role) {
-                res.status(200).json(role.toJson());
-            } else {
-                res.status(500).json({ error: 'Erreur serveur.' });
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
-
     static async forceFind(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);

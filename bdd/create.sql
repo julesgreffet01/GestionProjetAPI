@@ -109,8 +109,10 @@ CREATE TABLE "TrelloCards" (
     "dateReal" DATE,
     position INTEGER NOT NULL,
     realised BOOLEAN DEFAULT FALSE,
+    "idRealisateur" INTEGER DEFAULT NULL,
     "idList" INTEGER,
-    FOREIGN KEY ("idList") REFERENCES "TrelloLists" (id) ON DELETE CASCADE
+    FOREIGN KEY ("idList") REFERENCES "TrelloLists" (id) ON DELETE CASCADE,
+    FOREIGN KEY ("idRealisateur") REFERENCES "User" (id) ON DELETE SET NULL
 );
 
 

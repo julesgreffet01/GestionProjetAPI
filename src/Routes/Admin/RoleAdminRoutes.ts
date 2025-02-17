@@ -7,8 +7,6 @@ router.get('/', RoleController.getAll)
 router.get('/force', RoleController.forceGetAll)
 router.get('/force/:id', RoleController.forceFind)
 
-router.get('/:id', RoleController.find)
-
 router.post('/', RoleController.create)
 router.post('/restore/:id', RoleController.restore)
 

@@ -52,7 +52,7 @@ export class ToDoTaskDAO extends GlobalDAO {
     }
 
 
-    static async getAllByOrderByToDo(toDoId: number){
+    static async getAllByOrderByTodo(toDoId: number){
         const client = await connectDB();
         try {
             const toDoTaskDAO = new ToDoTaskDAO();
@@ -92,13 +92,13 @@ export class ToDoTaskDAO extends GlobalDAO {
     }
 
 
-    static async realiser(taskId: number, rea: boolean, idRealisateur: number | null = null) {
+    static async realiser(taskId: number, real: boolean, idRealisateur: number | null = null) {
         const client = await connectDB();
         try {
             const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
             const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $2`;
-            const result = await client.query(query, [rea, taskId, idRealisateur]);
+            const result = await client.query(query, [real, taskId, idRealisateur]);
             return  await toDoTaskDAO.objectToClass(result.rows[0]);
         } catch (error) {
             console.error("Erreur lors du realised :", error);

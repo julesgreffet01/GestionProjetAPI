@@ -7,9 +7,9 @@ import {ProjectUserDAO} from "../../Models/DAO/Project/ProjectUserDAO";
 
 export class ProjectController {
 
-    static async getAll(req: Request, res: Response) {
+    static async forceGetAll(req: Request, res: Response) {
         try {
-            const projects = await ProjectDAO.getAll();
+            const projects = await ProjectDAO.forceGetAll();
             const projectsJson = projects.map((project: any) => project.toJson());
             res.status(200).json(projectsJson);
         } catch (e) {
@@ -18,10 +18,11 @@ export class ProjectController {
         }
     }
 
-    static async forceGetAll(req: Request, res: Response) {
+    static async getAllByUser(req: Request, res: Response) {
         try {
-            const projects = await ProjectDAO.forceGetAll();
-            const projectsJson = projects.map((project: any) => project.toJson());
+            const userId = parseInt(req.params.userId);
+            const projects = await ProjectDAO.getAllByUser(userId);
+            const projectsJson = projects.map((project) => project.toJson());
             res.status(200).json(projectsJson);
         } catch (e) {
             console.error(e);

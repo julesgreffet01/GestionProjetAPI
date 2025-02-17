@@ -3,6 +3,7 @@ import {TrelloCard} from "../../BO/Trello/TrelloCard.js";
 import {TrelloListDAO} from "./TrelloListDAO.js";
 import {TrelloCardUserDAO} from "./TrelloCardUserDAO.js";
 import connectDB from "../../../Config/dbConfig";
+import {UserDAO} from "../UserDAO";
 
 export class TrelloCardDAO extends GlobalDAO {
     getTableName(): string {
@@ -10,14 +11,16 @@ export class TrelloCardDAO extends GlobalDAO {
     }
     async objectToClass(row: any): Promise<TrelloCard> {
         const list = await TrelloListDAO.find(row.idList);
+        const realisateur = row.idrealisateur ? await UserDAO.find(row.idrealisateur) : null;
         return new TrelloCard(
-           row.id,
-           row.nom,
-           row.description,
-           new Date(row.dateReal),
-           row.position,
-           row.realised,
-           list
+            row.id,
+            row.nom,
+            row.description,
+            new Date(row.dateReal),
+            row.position,
+            row.realised,
+            list,
+            realisateur,
        )
     }
 
@@ -33,7 +36,8 @@ export class TrelloCardDAO extends GlobalDAO {
                 new Date(row.dateReal),
                 row.position,
                 row.realised,
-                row.list
+                row.list,
+                row.realisateur
             )
         );
     }
@@ -43,9 +47,23 @@ export class TrelloCardDAO extends GlobalDAO {
     static async getAllByListAndPosition(listId: number): Promise<TrelloCard[]> {
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
-        const query = `SELECT * FROM ${tableName} WHERE "idList" = $1 ORDER BY position ASC`;
+        const query = `SELECT * FROM ${tableName} WHERE "idList" = $1 AND realised = FALSE ORDER BY position ASC`;
         try {
             const result = await client.query(query, [listId]);
+            return await Promise.all(result.rows.map((row) => this.prototype.objectToClass(row)));
+        } catch (e) {
+            console.error("Authentication error:", e);
+            throw e;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getAllRealisedByTrello(trelloId: number): Promise<TrelloCard[]> {
+        const client = await connectDB();
+        const query = `SELECT tc.* FROM "TrelloCards" tc INNER JOIN "TrelloLists" tl ON tc."idList" = tl.id INNER JOIN "Trello" t ON tl."idTrello" = t.id WHERE t.id = $1 AND tl.del = FALSE AND tc.realised = TRUE ORDER BY tc.id ASC`;
+        try {
+            const result = await client.query(query, [trelloId]);
             return await Promise.all(result.rows.map((row) => this.prototype.objectToClass(row)));
         } catch (e) {
             console.error("Authentication error:", e);
@@ -72,5 +90,10 @@ export class TrelloCardDAO extends GlobalDAO {
         } finally {
             client.release();
         }
+    }
+
+    static async changeRealised(real: boolean, ){
+        const client = await connectDB();
+        const tableName = this.prototype.getTableName();
     }
 }

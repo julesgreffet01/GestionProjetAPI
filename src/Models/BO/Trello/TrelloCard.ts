@@ -1,4 +1,5 @@
 import {TrelloList} from "./TrelloList.js";
+import {User} from "../User";
 
 export class TrelloCard {
     private _id: number;
@@ -8,8 +9,9 @@ export class TrelloCard {
     private _position: number | null;
     private _realised: boolean;
     private _list: TrelloList | null | object;
+    private _realisateur : User | null | object;
 
-    constructor(id: number, nom: string, description: string, dateReal: Date, position: number| null, realised: boolean, list: TrelloList | null | object) {
+    constructor(id: number, nom: string, description: string, dateReal: Date, position: number| null, realised: boolean, list: TrelloList | null | object, realisateur : User | null | object) {
         this._id = id;
         this._nom = nom;
         this._description = description;
@@ -17,6 +19,7 @@ export class TrelloCard {
         this._position = position;
         this._realised = realised;
         this._list = list;
+        this._realisateur = realisateur;
     }
 
     get id(): number {
@@ -75,14 +78,21 @@ export class TrelloCard {
         this._list = value;
     }
 
+    get realisateur(): User | object | null {
+        return this._realisateur;
+    }
+
+    set realisateur(value: User | object | null) {
+        this._realisateur = value;
+    }
+
     toBDD(): object {
         //@ts-ignore
         const idList = this.list ? this.list.id : null;
         return {
             nom: this.nom,
             description: this.description,
-            dateReal: this.dateReal,
-            idList: idList
+            dateReal: this.dateReal
         }
     }
 
@@ -94,7 +104,8 @@ export class TrelloCard {
             position: this.position,
             dateReal: this.dateReal,
             realised: this.realised,
-            list: this.list
+            list: this.list,
+            realisateur: this.realisateur
         }
     }
 }

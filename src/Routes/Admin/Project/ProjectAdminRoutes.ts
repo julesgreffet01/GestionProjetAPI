@@ -2,7 +2,6 @@ import express from 'express';
 const router = express.Router();
 import {ProjectController} from "../../../Controllers/Project/ProjectController";
 
-router.get('/', ProjectController.getAll)
 
 router.get('/force/', ProjectController.forceGetAll)
 router.get('/force/:id', ProjectController.forceFind)

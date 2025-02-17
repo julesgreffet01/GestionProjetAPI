@@ -7,10 +7,10 @@ import {ToDoDAO} from "../../Models/DAO/ToDo/ToDoDAO";
 export class ToDoTaskController {
 
 
-    static async getAllByOrdre(req: Request, res: Response) {
+    static async getAllByOrdreByTodo(req: Request, res: Response) {
         try {
             const todoId = parseInt(req.params.todoId);
-            const tasks = await ToDoTaskDAO.getAllByOrderByToDo(todoId);
+            const tasks = await ToDoTaskDAO.getAllByOrderByTodo(todoId);
             const tasksJson = tasks.map((task: any)=> task.toJson());
             res.status(200).json(tasksJson);
         } catch (e) {

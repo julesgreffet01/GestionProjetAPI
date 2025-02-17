@@ -20,7 +20,22 @@ export class ToDoDAO extends GlobalDAO {
     static async getAllByProject(projectId: number) {
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
-        const query = `SELECT * FROM ${tableName} WHERE "idProject" = ${projectId}`;
+        const query = `SELECT * FROM ${tableName} WHERE "idProject" = ${projectId} AND del = FALSE`;
+        try {
+            const result = await client.query(query);
+            return await Promise.all(result.rows.map((row)=> this.prototype.objectToClass(row)));
+        } catch (e) {
+            console.error("Authentication error:", e);
+            throw e;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getAllDelByProject(projectId: number) {
+        const client = await connectDB();
+        const tableName = this.prototype.getTableName();
+        const query = `SELECT * FROM ${tableName} WHERE "idProject" = ${projectId} AND del = TRUE`;
         try {
             const result = await client.query(query);
             return await Promise.all(result.rows.map((row)=> this.prototype.objectToClass(row)));
