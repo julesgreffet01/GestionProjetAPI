@@ -3,12 +3,10 @@ const router = express.Router();
 import {TrelloListController} from "../../../Controllers/Trello/TrelloListController";
 
 
-router.get('/', TrelloListController.getAll)
 
-router.get('/force', TrelloListController.forceGetAll)
 router.get ('/force/:id', TrelloListController.forceFind)
 
-router.get('/trello/:trelloId', TrelloListController.getAllByTrello)
+router.get('/trello/:trelloId', TrelloListController.getAllByPositionAndTrello)
 
 router.get('/:id', TrelloListController.find)
 

@@ -92,8 +92,18 @@ export class TrelloCardDAO extends GlobalDAO {
         }
     }
 
-    static async changeRealised(real: boolean, ){
+    static async changeRealised(taskId: number, real: boolean, realisateurId: number | null = null){
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
+        const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3`;
+        try {
+            const result = await client.query(query, [real, realisateurId, taskId]);
+            return await this.prototype.objectToClass(result.rows[0]);
+        } catch (e) {
+            console.error("Authentication error:", e);
+            throw e;
+        } finally {
+            client.release();
+        }
     }
 }

@@ -55,14 +55,30 @@ export class ToDoTaskDAO extends GlobalDAO {
     static async getAllByOrderByTodo(toDoId: number){
         const client = await connectDB();
         try {
-            const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
             const query = `SELECT * FROM ${tableName} WHERE del = FALSE AND "idTodo" = $1 ORDER BY ordre ASC`;
             const result = await client.query(query, [toDoId]);
             return await Promise.all(result.rows.map(async (row) => {
-                return await toDoTaskDAO.objectToClass(row);
+                return await this.prototype.objectToClass(row);
             }));
         }catch (error) {
+            console.error("Erreur lors getAll par ordre :", error);
+            throw error;
+        } finally {
+            if (client) client.release();
+        }
+    }
+
+    static async getAllRealisedByTodo(toDoId: number){
+        const client = await connectDB();
+        const tableName = this.prototype.getTableName();
+        const query = `SELECT * FROM ${tableName} WHERE del = TRUE AND "idTodo" = $1 ORDER BY ordre ASC`;
+        try {
+            const result = await client.query(query, [toDoId]);
+            return await Promise.all(result.rows.map(async (row) => {
+                return await this.prototype.objectToClass(row);
+            }));
+        } catch (error) {
             console.error("Erreur lors getAll par ordre :", error);
             throw error;
         } finally {
@@ -95,11 +111,10 @@ export class ToDoTaskDAO extends GlobalDAO {
     static async realiser(taskId: number, real: boolean, idRealisateur: number | null = null) {
         const client = await connectDB();
         try {
-            const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
-            const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $2`;
-            const result = await client.query(query, [real, taskId, idRealisateur]);
-            return  await toDoTaskDAO.objectToClass(result.rows[0]);
+            const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3`;
+            const result = await client.query(query, [real, idRealisateur, taskId]);
+            return  await this.prototype.objectToClass(result.rows[0]);
         } catch (error) {
             console.error("Erreur lors du realised :", error);
             throw error;
@@ -111,11 +126,10 @@ export class ToDoTaskDAO extends GlobalDAO {
     static async enCours(userId: number, bool: boolean): Promise<ToDoTask> {
         const client = await connectDB();
         try {
-            const toDoTaskDAO = new ToDoTaskDAO();
             const tableName = this.prototype.getTableName();
             const query = `UPDATE ${tableName} SET "enCours" = $1 WHERE id = $2`;
             const result = await client.query(query, [bool, userId]);
-            return  await toDoTaskDAO.objectToClass(result.rows[0]);
+            return  await this.prototype.objectToClass(result.rows[0]);
         }catch (error) {
             console.error("Erreur lors du enCours :", error);
             throw error;

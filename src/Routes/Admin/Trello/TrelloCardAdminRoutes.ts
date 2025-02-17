@@ -3,7 +3,6 @@ const router = express.Router();
 import {TrelloCardController} from "../../../Controllers/Trello/TrelloCardController";
 
 
-router.get('/force/', TrelloCardController.forceGetAll)
 
 router.get('/list/:listId', TrelloCardController.getAllByListAndPosition)
 

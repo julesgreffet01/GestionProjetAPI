@@ -6,16 +6,6 @@ import { Request, Response } from 'express';
 export class ToDoController {
 
 
-    static async forceGetAll(req: Request, res: Response) {
-        try {
-            const toDos = await ToDoDAO.forceGetAll();
-            const toDosJson = toDos.map((todo: any)=> todo.toJson());
-            res.status(200).json(toDosJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
 
     static async getAllByProject(req: Request, res: Response) {
         try {
@@ -155,40 +145,6 @@ export class ToDoController {
         }
     }
 
-    static async delete(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            if(!id){
-                res.status(404).json({error: 'Probleme d id'});
-                return;
-            }
-            const toDo = await ToDoDAO.forceFind(id);
-            if(!toDo){
-                res.status(404).json({error: 'pas de todo trouve'});
-                return;
-            } else if (toDo instanceof ToDo){
-                const nbRow = await ToDoDAO.delete(toDo);
-                if(!nbRow){
-                    res.status(404).json({error: 'No such project'});
-                    return;
-                } else if (nbRow >= 1){
-                    toDo.del = true;
-                    res.status(200).json(toDo.toJson());
-                    return;
-                } else {
-                    res.status(500).json({ error: 'Erreur serveur.' });
-                    return;
-                }
-            } else {
-                res.status(500).json({ error: 'Erreur serveur.' });
-                return;
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
-
     static async restore(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
@@ -209,5 +165,4 @@ export class ToDoController {
             res.status(500).json({ error: 'Erreur serveur.' });
         }
     }
-
 }

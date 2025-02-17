@@ -33,6 +33,21 @@ export class TrelloListDAO extends GlobalDAO{
         }
     }
 
+    static async getAllDelByTrello(trelloId: number): Promise<TrelloList[]> {
+        const client  = await connectDB();
+        const tableName = this.prototype.getTableName();
+        const query = `SELECT * FROM ${tableName} WHERE "idTrello" = $1 AND del = TRUE`;
+        try {
+            const result = await client.query(query, [trelloId]);
+            return await Promise.all(result.rows.map(row => this.prototype.objectToClass(row)));
+        } catch (e) {
+            console.error(e);
+            throw e;
+        } finally {
+            client.release();
+        }
+    }
+
     static async updatePosition(positions: object){
         const client = await connectDB();
         const tableName = this.prototype.getTableName();

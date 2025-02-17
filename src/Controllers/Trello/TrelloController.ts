@@ -5,27 +5,6 @@ import {ProjectDAO} from "../../Models/DAO/Project/ProjectDAO";
 
 export class TrelloController {
 
-    static async getAll(req: Request, res: Response) {
-        try {
-            const trellos = await TrelloDAO.getAll();
-            const trellosJson = trellos.map((trello: any) => trello.toJson());
-            res.status(200).json(trellosJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
-
-    static async forceGetAll(req: Request, res: Response) {
-        try {
-            const trellos = await TrelloDAO.forceGetAll();
-            const trellosJson = trellos.map((trello: any) => trello.toJson());
-            res.status(200).json(trellosJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
 
     static async getAllByProject(req: Request, res: Response) {
         try {
@@ -39,29 +18,22 @@ export class TrelloController {
         }
     }
 
-    static async find(req: Request, res: Response) {
+    static async getAllDelByProject(req: Request, res: Response) {
         try {
-            const id = parseInt(req.params.id);
-            const trello = await TrelloDAO.find(id);
-            if(!trello) {
-                res.status(404).json({ error: 'Trello not found' });
-                return;
-            } else if (trello instanceof Trello) {
-                res.status(200).json(trello.toJson());
-                return;
-            } else {
-                res.status(500).json({ error: 'Erreur serveur.' });
-            }
+            const projectId = parseInt(req.params.projectId);
+            const trellos = await TrelloDAO.getAllDelByProject(projectId);
+            const trellosJson = trellos.map((trello: any) => trello.toJson());
+            res.status(200).json(trellosJson);
         } catch (e) {
             console.error(e);
             res.status(500).json({ error: 'Erreur serveur.' });
         }
     }
 
-    static async forceFind(req: Request, res: Response) {
+    static async find(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const trello = await TrelloDAO.forceFind(id);
+            const trello = await TrelloDAO.find(id);
             if(!trello) {
                 res.status(404).json({ error: 'Trello not found' });
                 return;
@@ -142,29 +114,6 @@ export class TrelloController {
                 res.status(404).json({ error: 'Trello not found' });
             } else if (newTrello instanceof Trello ){
                 res.status(200).json(newTrello.toJson());
-            } else {
-                res.status(500).json({ error: 'Erreur serveur.' });
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
-
-    static async delete(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const trello = await TrelloDAO.forceFind(id);
-            if(!trello) {
-                res.status(404).json({ error: 'Trello not found' });
-            } else if(trello instanceof Trello){
-                const nbRow = await TrelloDAO.delete(trello);
-                if(!nbRow){
-                    res.status(404).json({ error: 'probleme de delete' });
-                } else {
-                    trello.del = true;
-                    res.status(200).json(trello.toJson());
-                }
             } else {
                 res.status(500).json({ error: 'Erreur serveur.' });
             }

@@ -5,17 +5,6 @@ import {TrelloListDAO} from "../../Models/DAO/Trello/TrelloListDAO";
 
 export class TrelloCardController {
 
-    static async forceGetAll(req: Request, res: Response) {
-        try {
-            const cards = await TrelloCardDAO.forceGetAll();
-            const cardsJson = cards.map((card: any) => card.toJson());
-            res.status(200).json(cardsJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: 'Erreur serveur.' });
-        }
-    }
-
     static async getAllByListAndPosition(req: Request, res: Response) {
         try {
             const listId = parseInt(req.params.listId);
@@ -114,5 +103,38 @@ export class TrelloCardController {
         }
     }
 
-
+    static async changeRealised(req: Request, res: Response) {
+        try {
+            const {real} = req.body;
+            const id = parseInt(req.params.id);
+            if(!id){
+                res.status(404).json({ error: 'id not found' });
+                return;
+            }
+            let card = null;
+            if(real == null){
+                res.status(404).json({ error: 'Not all information' });
+                return;
+            } else if(real){
+                const {realisateurId} = req.body
+                if(realisateurId != null){
+                    res.status(404).json({ error: 'Not all information' });
+                    return;
+                }
+                card = await TrelloCardDAO.changeRealised(id, real, realisateurId);
+            } else {
+                card = await TrelloCardDAO.changeRealised(id, real);
+            }
+            if(card == null){
+                res.status(404).json({error: 'No such card'});
+            } else if(card instanceof TrelloCard){
+                res.status(200).json(card.toJson());
+            } else {
+                res.status(500).json({ error: 'Erreur serveur.' });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
 }

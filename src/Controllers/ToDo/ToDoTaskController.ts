@@ -19,6 +19,18 @@ export class ToDoTaskController {
         }
     }
 
+    static async getAllRealisedByTodo(req: Request, res: Response){
+        try {
+            const todoId = parseInt(req.params.todoId);
+            const tasks = await ToDoTaskDAO.getAllRealisedByTodo(todoId);
+            const tasksJson = tasks.map((task: any)=> task.toJson());
+            res.status(200).json(tasksJson);
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Erreur Serveur'});
+        }
+    }
+
     static async find(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
@@ -104,49 +116,21 @@ export class ToDoTaskController {
         }
     }
 
-    static async delete(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            if(!id){
-                res.status(404).json({error: 'Invalid ID'});
-                return;
-            }
-            const task = await ToDoTaskDAO.forceFind(id);
-            if(!task){
-                res.status(404).json({error: 'Pas de todo a cet id'})
-                return;
-            } else if (task instanceof ToDoTask){
-                const nbRow = await ToDoTaskDAO.delete(task);
-                if(!nbRow){
-                    res.status(404).json({error: 'No such task'});
-                    return;
-                } else if (nbRow >= 1){
-                    res.status(200).json(task.toJson());
-                    return;
-                } else {
-                    res.status(500).json({ error: 'Erreur serveur.' });
-                    return;
-                }
-            } else {
-                res.status(500).json({error: 'Erreur Serveur'});
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur Serveur'});
-        }
-    }
-
     static async realiser(req: Request, res: Response) {
         try {
             const {real} = req.body;
             const id = parseInt(req.params.id);
             let task;
-            if(real != null){
+            if(real == null){
                 res.status(404).json({error: 'Not all information'});
                 return;
             } else if(real){
                 const {realisateurId} = req.body
-                 task = await ToDoTaskDAO.realiser(id, real, realisateurId);
+                if(realisateurId != null){
+                    res.status(404).json({ error: 'Not all information' });
+                    return;
+                }
+                task = await ToDoTaskDAO.realiser(id, real, realisateurId);
             } else {
                  task = await ToDoTaskDAO.realiser(id, real);
             }
