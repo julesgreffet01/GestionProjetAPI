@@ -111,7 +111,7 @@ export class ProjectUserDAO {
             }
             const tabFinal = result.rows.map(row => new ProjectUser(
                 row.idUser,
-                row.idProj,
+                row.idProject,
                 row.idRole,
                 row.del
             ));

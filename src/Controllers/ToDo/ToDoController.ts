@@ -29,7 +29,7 @@ export class ToDoController {
 
     static async getAllByProject(req: Request, res: Response) {
         try {
-            const { projectId } = req.body;
+            const  projectId  = parseInt(req.params.projectId);
             const toDos = await ToDoDAO.getAllByProject(projectId)
             const toDosJson = toDos.map((todo)=> todo.toJson());
             res.status(200).json(toDosJson);

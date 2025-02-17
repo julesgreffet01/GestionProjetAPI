@@ -48,7 +48,8 @@ export abstract class GlobalDAO {
                 FROM information_schema.columns
                 WHERE table_name = $1 AND column_name = 'del'
             `;
-            const columnResult = await client.query(checkColumnQuery, [tableName]);
+            const columnResult = await client.query(checkColumnQuery, ['Projects']);
+
             const hasDelColumn = columnResult.rows.length > 0;
 
             // Construire la requête en fonction de l'existence de 'del'
