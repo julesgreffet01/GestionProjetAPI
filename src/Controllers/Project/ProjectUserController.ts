@@ -36,9 +36,9 @@ export class ProjectUserController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {idUser, idProject, roleId} = req.body;
-            if (idUser && idProject && roleId) {
-                const projectUser = new ProjectUser(idUser, idProject, roleId, false);
+            const {userId, projectId, roleId} = req.body;
+            if (userId && projectId && roleId) {
+                const projectUser = new ProjectUser(userId, projectId, roleId, false);
                 const newProjectUser = await ProjectUserDAO.create(projectUser);
                 if (!newProjectUser) {
                     res.status(404).json({error: 'probleme de create'});
@@ -62,6 +62,7 @@ export class ProjectUserController {
             const userId = parseInt(req.params.userId);
             const  {roleId, del}  = req.body;
             if(userId && projectId && roleId) {
+                const intRole = parseInt(roleId);
                 const rela = new ProjectUser(userId, projectId, roleId, del);
                 const nbRow = await ProjectUserDAO.update(rela);
                 if(!nbRow) {

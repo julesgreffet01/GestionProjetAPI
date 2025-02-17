@@ -179,7 +179,7 @@ export class ProjectController {
 
     static async restore(req: Request, res: Response) {
         try {
-            const projectId = parseInt(req.params.projectId);
+            const projectId = parseInt(req.params.id);
             const project = await ProjectDAO.restore(projectId);
             if(!project) {
                 res.status(401).json({message: "project probleme restore"});

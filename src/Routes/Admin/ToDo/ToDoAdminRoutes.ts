@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import {ToDoController} from "../../../Controllers/ToDo/ToDoController";
+import { ToDoController } from "../../../Controllers/ToDo/ToDoController";
 
 
 router.get('/force/', ToDoController.forceGetAll);

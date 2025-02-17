@@ -1,5 +1,5 @@
 import express from 'express';
-const router = express.Router();
+const   router = express.Router();
 import {ProjectController} from "../../../Controllers/Project/ProjectController";
 
 
@@ -9,7 +9,7 @@ router.get('/force/:id', ProjectController.forceFind)
 router.get('/:id', ProjectController.find);
 
 router.post('/', ProjectController.create);
-router.post('/restore/:projectId', ProjectController.restore);
+router.post('/restore/:id', ProjectController.restore);
 
 router.put('/:id', ProjectController.update);
 
