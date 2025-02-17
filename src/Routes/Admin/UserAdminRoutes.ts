@@ -6,7 +6,6 @@ import {loginUnique} from "../../Middlewares/LoginUnique";
 
 // On place les routes "force" avant la route générique :id
 router.get('/force', UserController.forceGetAll);
-router.get('/force/:id', UserController.forceFind);
 
 router.get('/findComplet/:id', UserController.findComplet);
 

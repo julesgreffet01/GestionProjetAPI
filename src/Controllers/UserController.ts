@@ -66,22 +66,6 @@ export class UserController {
         }
     }
 
-    static async forceFind(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const user = await UserDAO.forceFind(id);
-            if (!user) {
-                res.status(401).json({message: "User not found"});
-            } else if(user instanceof User) {
-                res.status(200).json(user.toJson());
-            } else {
-                res.status(500).json({error: 'Erreur serveur.'});
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur serveur.'});
-        }
-    }
 
     static async forceGetAll(req: Request, res: Response) {
         try {
@@ -94,6 +78,7 @@ export class UserController {
         }
     }
 
+    //todo a voir si ca sert
     static async getAllByProject(req: Request, res: Response) {
         try {
             const projectId = parseInt(req.params.projectId);
