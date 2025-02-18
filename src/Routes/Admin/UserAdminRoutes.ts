@@ -4,7 +4,6 @@ import {UserController} from "../../Controllers/UserController";
 import {loginUnique} from "../../Middlewares/LoginUnique";
 
 router.get('/', UserController.forceGetAll);
-router.get('/findComplet/:id', UserController.findComplet);
 
 // post
 router.post('/', loginUnique,UserController.create);

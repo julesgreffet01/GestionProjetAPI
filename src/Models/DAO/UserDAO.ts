@@ -86,7 +86,7 @@ export class UserDAO extends GlobalDAO{
     static async logUnique(log: string): Promise<boolean> {
         const client = await connectDB();
         try {
-            const result = await client.query('SELECT 1 FROM users WHERE log = $1 LIMIT 1', [log]);
+            const result = await client.query('SELECT 1 FROM "Users" WHERE log = $1 LIMIT 1', [log]);
 
             return result.rows.length !== 0;
 

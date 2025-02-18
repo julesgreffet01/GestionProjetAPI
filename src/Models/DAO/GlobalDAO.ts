@@ -29,13 +29,20 @@ export abstract class GlobalDAO {
         try {
             const tableName = this.prototype.getTableName();
 
+            // Normaliser tableName pour s'assurer qu'il est sans guillemets
+            let match = tableName.match(/^"?(.*?)"?$/);
+            let newTableName;
+            if (match) {
+                 newTableName = match[1];
+            }
+
             // Vérifier si la colonne 'del' existe dans la table
             const checkColumnQuery = `
-                SELECT column_name
-                FROM information_schema.columns
-                WHERE table_name = $1 AND column_name = 'del'
-            `;
-            const columnResult = await client.query(checkColumnQuery, ['Projects']);
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = $1 AND column_name = 'del'
+        `;
+            const columnResult = await client.query(checkColumnQuery, [newTableName]);
 
             const hasDelColumn = columnResult.rows.length > 0;
 
@@ -54,6 +61,7 @@ export abstract class GlobalDAO {
             if (client) client.release();
         }
     }
+
 
 
     static async forceFind(id: number): Promise<object | null> {

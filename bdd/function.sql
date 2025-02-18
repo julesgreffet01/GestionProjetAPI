@@ -5,6 +5,8 @@ BEGIN
 
     UPDATE "ToDoTasks" SET "idRealisateur" = NULL WHERE "idRealisateur" = NEW.id;
 
+    UPDATE "Projects" SET "idCreateur" = NULL WHERE "idCreateur" = NEW.id;
+
     UPDATE "ToDoTasksUsers" SET del = TRUE WHERE "idUser" = NEW.id;
 
     UPDATE "TrelloCardUser" SET del = TRUE WHERE "idUser" = NEW.id;
