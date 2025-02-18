@@ -18,7 +18,8 @@ export class ToDoTaskUserController {
 
     static async create(req: Request, res: Response) {
         try {
-            const { taskId, userId} = req.body;
+            const taskId = parseInt(req.params.taskId, 10);
+            const {userId} = req.body;
             if(taskId && userId) {
                 const taskUser = new ToDoTaskUser(userId, taskId, false);
                 const result = await ToDoTaskUserDAO.create(taskUser);

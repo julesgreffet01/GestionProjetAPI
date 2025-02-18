@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import {UserDAO} from "../../Models/DAO/UserDAO";
 import {ProjectUser} from "../../Models/BO/Project/ProjectUser";
 import {ProjectUserDAO} from "../../Models/DAO/Project/ProjectUserDAO";
+import {CustomRequest} from "../../Interfaces";
 
 export class ProjectController {
 
@@ -12,6 +13,18 @@ export class ProjectController {
         try {
             const userId = parseInt(req.params.userId);
             const projects = await ProjectDAO.getAllByUser(userId);
+            const projectsJson = projects.map((project) => project.toJson());
+            res.status(200).json(projectsJson);
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ error: 'Erreur serveur.' });
+        }
+    }
+
+    static async getAllDelByCreateur(req: CustomRequest, res: Response) {
+        try {
+            const creaId = req.token?.id;
+            const projects = await ProjectDAO.getAllDelByCreateur(creaId);
             const projectsJson = projects.map((project) => project.toJson());
             res.status(200).json(projectsJson);
         } catch (e) {

@@ -65,9 +65,9 @@ export class ProjectDAO extends GlobalDAO{
         }
     }
 
-    static async getAllDelByUser(userId: number) {
+    static async getAllDelByCreateur(userId: number) {
         const client = await connectDB();
-        const query = `SELECT p.* FROM "Projects" p INNER JOIN "ProjectUser" pu on p.id = pu."idProject" WHERE pu."idUser" = $1 AND pu.del = FALSE AND p.del = TRUE`
+        const query = `SELECT * FROM "Projects"  WHERE "idCreateur" = $1 del = TRUE`
         try {
             const result = await client.query(query, [userId]);
             return result.rows.length > 0 ? await Promise.all(result.rows.map(async(row)  => await this.prototype.objectToClass(row))) : [];

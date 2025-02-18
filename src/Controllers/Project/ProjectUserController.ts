@@ -4,20 +4,6 @@ import { Request, Response } from 'express';
 
 export class ProjectUserController {
 
-    static async getAllByUser(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.userId, 10); // Vérifie bien que le paramètre correspond à :userId dans la route
-            if (isNaN(id)) {
-               res.status(400).json({ error: "Invalid user ID" });
-            }
-            const projectUsers = await ProjectUserDAO.getAllByUser(id);
-            res.json(projectUsers.map(projectUser => projectUser.toJson()));
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ error: "Erreur serveur." });
-        }
-    }
-
     static async getAllByProj(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.projectId, 10);

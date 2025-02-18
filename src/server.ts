@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';  // Importation d'Express 
 const dotenv = require('dotenv').config();
 import verifyAndHashPasswords from './Routes/hashage';
 import AdminRoutes from './Routes/Admin/AdminRoutes';
+import UserRoutes from './Routes/User/UserRoutes';
 
 
 const app = express();
@@ -21,6 +22,7 @@ app.get('/hash', (req: Request, res: Response) => {
 
 // Routes pour les admins
 app.use('/admin', AdminRoutes);
+app.use('/user', UserRoutes);
 
 
 // Démarrer le serveur
