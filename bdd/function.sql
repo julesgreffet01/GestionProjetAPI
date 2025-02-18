@@ -18,7 +18,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_propagate_del_users
     AFTER UPDATE OF del ON "Users"
     FOR EACH ROW
-    WHEN (NEW.del = TRUE)
+    WHEN (OLD.del = FALSE AND NEW.del = TRUE)
     EXECUTE FUNCTION propagate_del_from_users();
 
 
@@ -44,7 +44,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_restore_del_users
     AFTER UPDATE OF del ON "Users"
     FOR EACH ROW
-    WHEN (NEW.del = FALSE)
+    WHEN (OLD.del = TRUE AND NEW.del = FALSE)
     EXECUTE FUNCTION restore_del_for_user_relations();
 
 
@@ -67,7 +67,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_propagate_del_projects
     AFTER UPDATE OF del ON "Projects"
     FOR EACH ROW
-    WHEN (NEW.del = TRUE)
+    WHEN (OLD.del = FALSE AND NEW.del = TRUE)
     EXECUTE FUNCTION propagate_del_from_projects();
 
 
@@ -89,13 +89,74 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_restore_del_projects
     AFTER UPDATE OF del ON "Projects"
     FOR EACH ROW
-    WHEN (NEW.del = FALSE)
+    WHEN (OLD.del = TRUE AND NEW.del = FALSE)
     EXECUTE FUNCTION restore_del_for_project_relations();
 
 
+--################ todolist ###########
+CREATE OR REPLACE FUNCTION del_todo() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE "ToDoTasksUsers" SET del = TRUE WHERE "idTask" IN (SELECT id FROM "ToDoTasks" WHERE "idTodo" = NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_del_todo
+    AFTER UPDATE OF del ON "ToDo"
+    FOR EACH ROW
+    WHEN (OLD.del = FALSE AND NEW.del = TRUE)
+    EXECUTE FUNCTION del_todo();
+
+--restore
+CREATE OR REPLACE FUNCTION restore_todo() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE "ToDoTasksUsers" SET del = FALSE WHERE "idTask" IN (SELECT tt.id FROM "ToDoTasks" tt INNER JOIN "ToDo" t ON tt."idTodo" = t.id WHERE t.del = FALSE AND tt."idTodo" = NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_del_todo
+    AFTER UPDATE OF del ON "ToDo"
+    FOR EACH ROW
+    WHEN (OLD.del = TRUE AND NEW.del = FALSE)
+    EXECUTE FUNCTION restore_todo();
 
 
--- Trigger pour définir la position par défaut dans TrelloCards
+--############ trello ############
+CREATE OR REPLACE FUNCTION del_trello() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE "TrelloCardUser" SET del = TRUE WHERE "idCard" IN (SELECT id FROM "TrelloCards"
+            WHERE "idList" IN (SELECT id FROM "TrelloLists" WHERE "idTrello" = NEW.id));
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_del_trello
+    AFTER UPDATE OF del ON "Trello"
+    FOR EACH ROW
+    WHEN (OLD.del = FALSE AND NEW.del = TRUE)
+    EXECUTE FUNCTION del_trello();
+
+
+CREATE OR REPLACE FUNCTION del_trello_list() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE "TrelloCardUser" SET del = TRUE WHERE "idCard" IN (
+        SELECT id FROM "TrelloCards" WHERE "idList" = NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_del_trello_list
+    AFTER UPDATE OF del ON "TrelloLists"
+    FOR EACH ROW
+    WHEN (OLD.del = FALSE AND NEW.del = TRUE)
+    EXECUTE FUNCTION del_trello_list();
+
+
+
+
+--############ positions ###############
 CREATE OR REPLACE FUNCTION set_default_position_cards()
 RETURNS TRIGGER AS $$
 BEGIN
