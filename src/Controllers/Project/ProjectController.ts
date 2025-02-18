@@ -83,17 +83,13 @@ export class ProjectController {
                 const nbRow = await ProjectDAO.update(project);
                 if(!nbRow) {
                     res.status(404).json({error: 'probleme de update'});
-                    return;
                 } else if (nbRow >= 1){
                     res.status(200).json(project.toJson());
-                    return;
                 } else {
                     res.status(404).json({error: 'probleme de update'});
-                    return;
                 }
             } else {
                 res.status(400).json({error: 'Not all informations'});
-                return;
             }
         } catch (e) {
             console.error(e);

@@ -112,7 +112,7 @@ CREATE TABLE "TrelloCards" (
     "idRealisateur" INTEGER DEFAULT NULL,
     "idList" INTEGER,
     FOREIGN KEY ("idList") REFERENCES "TrelloLists" (id) ON DELETE CASCADE,
-    FOREIGN KEY ("idRealisateur") REFERENCES "User" (id) ON DELETE SET NULL
+    FOREIGN KEY ("idRealisateur") REFERENCES "Users" (id) ON DELETE SET NULL
 );
 
 

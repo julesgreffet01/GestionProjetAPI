@@ -5,20 +5,7 @@ export abstract class GlobalDAO {
     abstract getTableName(): string;
     abstract objectToClass(row: any): Promise<object>;
 
-    static async getAll(): Promise<object[]> {
-        const client = await connectDB();
-        try {
-            const tableName = this.prototype.getTableName();
-            const query = `SELECT * FROM ${tableName} WHERE del = FALSE`;
-            const { rows } = await client.query(query);
-            return Promise.all(rows.map(async (row) => await this.prototype.objectToClass(row)));
-        } catch (error) {
-            console.error("Error fetching all data:", error);
-            throw error;
-        } finally {
-            if(client) client.release();
-        }
-    }
+
 
     static async forceGetAll(): Promise<object[]> {
         const client = await connectDB();

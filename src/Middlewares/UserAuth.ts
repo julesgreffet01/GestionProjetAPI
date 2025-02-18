@@ -2,10 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import {CustomRequest} from "../Interfaces";
 
-const JWT_SECRET = "ASX2ergtH4";
+const JWT_SECRET = "kdqonc77cpccd1";
 
-
-export function adminAuth(req: CustomRequest, res: Response, next: NextFunction) {
+export function userAuth(req: CustomRequest, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
