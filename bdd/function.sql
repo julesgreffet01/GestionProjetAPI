@@ -93,6 +93,7 @@ CREATE TRIGGER trigger_restore_del_projects
     EXECUTE FUNCTION restore_del_for_project_relations();
 
 
+
 --################ todolist ###########
 CREATE OR REPLACE FUNCTION del_todo() RETURNS TRIGGER AS $$
 BEGIN
@@ -115,11 +116,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_del_todo
+CREATE TRIGGER trigger_restore_todo
     AFTER UPDATE OF del ON "ToDo"
     FOR EACH ROW
     WHEN (OLD.del = TRUE AND NEW.del = FALSE)
     EXECUTE FUNCTION restore_todo();
+
+
 
 
 --############ trello ############
@@ -138,6 +141,39 @@ CREATE TRIGGER trigger_del_trello
     EXECUTE FUNCTION del_trello();
 
 
+--restore
+CREATE OR REPLACE FUNCTION restore_del_for_trello_users() RETURNS trigger AS $$
+BEGIN
+    UPDATE "TrelloCardUser"
+    SET del = FALSE
+    WHERE "idCard" IN (
+        SELECT tc.id FROM "TrelloCards" tc
+                              JOIN "TrelloLists" tl ON tc."idList" = tl.id
+                              JOIN "Trello" t ON tl."idTrello" = t.id
+                              JOIN "Projects" p ON t."idProj" = p.id
+        WHERE t.id = NEW.id
+          AND tl.del = FALSE
+          AND t.del = FALSE
+          AND p.del = FALSE
+    )
+      AND "idUser" IN (
+        SELECT id FROM "Users" WHERE del = FALSE
+    );
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_restore_del_trello_users
+    AFTER UPDATE OF del ON "Trello"
+    FOR EACH ROW
+    WHEN (OLD.del = TRUE AND NEW.del = FALSE)
+    EXECUTE FUNCTION restore_del_for_trello_users();
+
+
+
+
+--############## lists #################"
 CREATE OR REPLACE FUNCTION del_trello_list() RETURNS TRIGGER AS $$
 BEGIN
     UPDATE "TrelloCardUser" SET del = TRUE WHERE "idCard" IN (
@@ -153,6 +189,35 @@ CREATE TRIGGER trigger_del_trello_list
     WHEN (OLD.del = FALSE AND NEW.del = TRUE)
     EXECUTE FUNCTION del_trello_list();
 
+
+--restore
+CREATE OR REPLACE FUNCTION restore_del_for_trello_list_users() RETURNS trigger AS $$
+BEGIN
+    UPDATE "TrelloCardUser"
+    SET del = FALSE
+    WHERE "idCard" IN (
+        SELECT tc.id FROM "TrelloCards" tc
+                              JOIN "TrelloLists" tl ON tc."idList" = tl.id
+                              JOIN "Trello" t ON tl."idTrello" = t.id
+                              JOIN "Projects" p ON t."idProj" = p.id
+        WHERE tl.id = NEW.id
+          AND t.del = FALSE
+          AND p.del = FALSE
+    )
+      AND "idUser" IN (
+        SELECT id FROM "Users" WHERE del = FALSE
+    );
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_restore_del_trello_list_users
+    AFTER UPDATE OF del ON "TrelloLists"
+    FOR EACH ROW
+    WHEN (OLD.del = TRUE AND NEW.del = FALSE)
+    EXECUTE FUNCTION restore_del_for_trello_list_users();
 
 
 
