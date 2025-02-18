@@ -9,15 +9,12 @@ router.get('/force', UserController.forceGetAll);
 
 router.get('/findComplet/:id', UserController.findComplet);
 
-// Ensuite la route qui prend un paramètre :id
-router.get('/:id', UserController.find);
-
 // post
 router.post('/', loginUnique,UserController.create);
-router.post('/restore/:userId', UserController.restore);
 
 // update
 router.put('/:id', UserController.update);
+router.put('/restore/:id', UserController.restore);
 
 //delete
 router.delete('/:id', UserController.softDelete);

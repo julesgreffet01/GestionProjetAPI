@@ -183,7 +183,7 @@ export class UserController {
 
     static async restore(req: Request, res: Response) {
         try {
-            const userId = parseInt(req.params.userId);
+            const userId = parseInt(req.params.id);
             const user = await UserDAO.restore(userId);
             if(!user) {
                 res.status(401).json({message: "User probleme restore"});
