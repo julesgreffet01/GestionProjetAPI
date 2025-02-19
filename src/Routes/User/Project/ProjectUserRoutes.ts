@@ -1,5 +1,5 @@
 import express from 'express';
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 import {ProjectUserController} from "../../../Controllers/Project/ProjectUserController";
 
 router.get('/', ProjectUserController.getAllByProj)

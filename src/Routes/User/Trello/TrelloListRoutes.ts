@@ -1,5 +1,5 @@
 import express from 'express';
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 import {TrelloListController} from "../../../Controllers/Trello/TrelloListController";
 import TrelloCardRoutes from "./TrelloCardRoutes";
 

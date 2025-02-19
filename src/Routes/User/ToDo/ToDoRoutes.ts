@@ -1,5 +1,5 @@
 import express from 'express';
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 import {ToDoController} from "../../../Controllers/ToDo/ToDoController";
 import ToDoTaskRoutes from "./ToDoTaskRoutes";
 

@@ -30,7 +30,7 @@ export class ProjectUserDAO {
 
     static async getAllByProject(projId: number): Promise<ProjectUser[]> {
         const client = await connectDB();
-        const query = `SELECT pu.* FROM "ProjectUser" pu INNER JOIN "Projects" p ON pu."idProject" = p.id WHERE pu."idProject" = 1 AND p.del = FALSE;`;
+        const query = `SELECT pu.* FROM "ProjectUser" pu INNER JOIN "Projects" p ON pu."idProject" = p.id WHERE pu."idProject" = $1 AND p.del = FALSE;`;
 
         try {
             const result = await client.query(query, [projId]);
@@ -78,7 +78,7 @@ export class ProjectUserDAO {
 
     static async find(userId: number, projId: number): Promise<ProjectUser | null> { // Retourne un seul objet ou null
         const client = await connectDB();
-        const query = `SELECT * FROM "ProjectUser" WHERE "idUser" = ? AND "idProject" = ? AND del = FALSE`;
+        const query = `SELECT * FROM "ProjectUser" WHERE "idUser" = $1 AND "idProject" = $2 AND del = FALSE`;
 
         try {
             const result = await client.query(query, [userId, projId]);
@@ -106,13 +106,10 @@ export class ProjectUserDAO {
 
     static async delete(idUser: number, idProj: number): Promise<number | null> {
         const client = await connectDB();
-        const query = `DELETE FROM "ProjectUser" WHERE "idUser" = ${idUser} AND "idProject" = ${idProj}`;
+        const query = `DELETE FROM "ProjectUser" WHERE "idUser" = $1 AND "idProject" = $2`;
 
         try {
-            const result = await client.query(query);
-            if (result.rows.length === 0) {
-                return null;
-            }
+            const result = await client.query(query, [idUser, idProj]);
             return result.rowCount;
         } catch (error) {
             console.error("Database error:", error);
