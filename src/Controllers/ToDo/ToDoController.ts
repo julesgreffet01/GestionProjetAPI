@@ -21,7 +21,7 @@ export class ToDoController {
 
     static async getAllDelByProject(req: Request, res: Response) {
         try {
-            const { projectId } = req.body;
+            const projectId  = parseInt(req.params.projectId);
             const toDos = await ToDoDAO.getAllDelByProject(projectId)
             const toDosJson = toDos.map((todo)=> todo.toJson());
             res.status(200).json(toDosJson);
@@ -57,7 +57,8 @@ export class ToDoController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {projectId, nom} = req.body;
+            const projectId = parseInt(req.params.projectId);
+            const {nom} = req.body;
             if(projectId && nom){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){
@@ -84,7 +85,8 @@ export class ToDoController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {projectId, nom} = req.body;
+            const projectId = parseInt(req.params.projectId);
+            const {nom} = req.body;
             if(projectId && nom && id){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){
