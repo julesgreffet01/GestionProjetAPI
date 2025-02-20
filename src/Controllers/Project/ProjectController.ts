@@ -113,7 +113,7 @@ export class ProjectController {
 
     static async softDelete(req: Request, res: Response) {
         try {
-            const id = parseInt(req.params.id);
+            const id = parseInt(req.params.projectId);
             const project = await ProjectDAO.find(id);
             if(!project){
                 res.status(404).json({error: 'pas de projet'});
@@ -138,7 +138,7 @@ export class ProjectController {
 
     static async restore(req: Request, res: Response) {
         try {
-            const projectId = parseInt(req.params.id);
+            const projectId = parseInt(req.params.projectId);
             const project = await ProjectDAO.restore(projectId);
             if(!project) {
                 res.status(401).json({message: "project probleme restore"});
