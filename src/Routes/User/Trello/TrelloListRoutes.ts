@@ -4,7 +4,7 @@ import {TrelloListController} from "../../../Controllers/Trello/TrelloListContro
 import TrelloCardRoutes from "./TrelloCardRoutes";
 
 router.get('/', TrelloListController.getAllByPositionAndTrello)
-router.get('/del', TrelloListController.getAllDelByTrello)  //todo admin/collaborateur
+router.get('/del', TrelloListController.getAllDelByTrello)
 
 router.get('/:id', TrelloListController.find)
 

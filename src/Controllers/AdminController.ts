@@ -8,7 +8,6 @@ export class AdminController {
     static async authentification(req: Request, res: Response) {
         try {
             const JWT_SECRET = "ASX2ergtH4";
-            const random = Math.random();
             const {log, mdp} = req.body;
             if(log && mdp){
                 const adminDAO = new AdminDAO();
@@ -17,7 +16,7 @@ export class AdminController {
                     res.status(404).json({message: "Admin not found"});
                 } else if (admin instanceof Admin) {
                     const token = jwt.sign(
-                        { random: random }, JWT_SECRET, { expiresIn: '1h' });
+                        {}, JWT_SECRET, { expiresIn: '1h' });
                     res.status(200).json({token: token});
                 } else {
                     res.status(500).json({ error: 'Erreur serveur.' });

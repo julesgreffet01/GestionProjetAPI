@@ -9,9 +9,9 @@ import {CustomRequest} from "../../Interfaces";
 export class ProjectController {
 
 
-    static async getAllByUser(req: Request, res: Response) {
+    static async getAllByUser(req: CustomRequest, res: Response) {
         try {
-            const userId = parseInt(req.params.userId);
+            const userId = req.token?.id;
             const projects = await ProjectDAO.getAllByUser(userId);
             const projectsJson = projects.map((project) => project.toJson());
             res.status(200).json(projectsJson);
@@ -35,7 +35,7 @@ export class ProjectController {
 
     static async find(req: Request, res: Response) {
         try {
-            const id = parseInt(req.params.id);
+            const id = parseInt(req.params.projectId);
             const project = await ProjectDAO.find(id);
             if(!project){
                 res.status(404).json({error: 'No such project'});
@@ -50,9 +50,10 @@ export class ProjectController {
         }
     }
 
-    static async create(req: Request, res: Response) {
+    static async create(req: CustomRequest, res: Response) {
         try {
-            const {nom, desc, createurId} = req.body;
+            const createurId = req.token?.id;
+            const {nom, desc} = req.body;
             if(nom && desc && createurId){
                 const user = await UserDAO.find(createurId);
                 if(!user){
@@ -84,7 +85,7 @@ export class ProjectController {
 
     static async update(req: Request, res: Response) {
         try {
-            const id = parseInt(req.params.id);
+            const id = parseInt(req.params.projectId);
             const {nom, desc, createurId} = req.body;
             if(nom && desc && createurId){
                 const user = await UserDAO.find(createurId);

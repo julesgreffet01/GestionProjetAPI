@@ -3,13 +3,13 @@ import jwt from 'jsonwebtoken';
 import {User} from "../Models/BO/User";
 import {UserDAO} from "../Models/DAO/UserDAO";
 import bcrypt from 'bcrypt';
+import {CustomRequest} from "../Interfaces";
 
 export class UserController {
 
     static async authenticate(req: Request, res: Response) {
         try {
             const JWT_SECRET = "kdqonc77cpccd1";
-            const random = Math.random();
             const {log, mdp} = req.body;
             if (log && mdp) {
                 const user = await UserDAO.authentification(log, mdp);
@@ -17,7 +17,7 @@ export class UserController {
                     res.status(401).json({message: "User not found"});
                 } else if (user instanceof User) {
                     const token = jwt.sign(
-                        {random: random, id: user.id}, JWT_SECRET, {expiresIn: '1h'});
+                        {id: user.id}, JWT_SECRET, {expiresIn: '1h'});
                     res.status(200).json({token: token});
                 } else {
                     res.status(500).json({error: 'Erreur serveur.'});
@@ -31,9 +31,9 @@ export class UserController {
         }
     }
 
-    static async find(req: Request, res: Response) {
+    static async find(req: CustomRequest, res: Response) {
         try {
-            const id = parseInt(req.params.id);
+            const id = req.token?.id;
             const user = await UserDAO.find(id)
             if (!user) {
                 res.status(401).json({message: "User not found"});
@@ -48,9 +48,9 @@ export class UserController {
         }
     }
 
-    static async findComplet(req: Request, res: Response) {
+    static async findComplet(req: CustomRequest, res: Response) {
         try {
-            const id = parseInt(req.params.id);
+            const id = req.token?.id;
             const userDAO = new UserDAO();
             const user = await userDAO.findComplet(id);
             if (!user) {
@@ -70,19 +70,6 @@ export class UserController {
     static async forceGetAll(req: Request, res: Response) {
         try {
             const users = await UserDAO.forceGetAll();
-            const usersJson = users.map((user: any) => user.toJson());
-            res.status(200).json(usersJson);
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({error: 'Erreur serveur.'});
-        }
-    }
-
-    //todo a voir si ca sert
-    static async getAllByProject(req: Request, res: Response) {
-        try {
-            const projectId = parseInt(req.params.projectId);
-            const users = await UserDAO.getAllByProject(projectId);
             const usersJson = users.map((user: any) => user.toJson());
             res.status(200).json(usersJson);
         } catch (e) {

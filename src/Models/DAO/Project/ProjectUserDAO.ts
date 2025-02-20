@@ -76,7 +76,7 @@ export class ProjectUserDAO {
         }
     }
 
-    static async find(userId: number, projId: number): Promise<ProjectUser | null> { // Retourne un seul objet ou null
+    static async find(userId: number, projId: number): Promise<ProjectUser | null> {
         const client = await connectDB();
         const query = `SELECT * FROM "ProjectUser" WHERE "idUser" = $1 AND "idProject" = $2 AND del = FALSE`;
 
