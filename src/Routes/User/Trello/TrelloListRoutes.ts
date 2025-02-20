@@ -16,6 +16,6 @@ router.put('/position', TrelloListController.updatePosition)    //todo admin/col
 
 router.delete('/:id', TrelloListController.softDelete)  //todo admin/collaborateur
 
-router.use('/:listId/card', TrelloCardRoutes)
+router.use('/:listId/Card', TrelloCardRoutes)
 
 export default router;

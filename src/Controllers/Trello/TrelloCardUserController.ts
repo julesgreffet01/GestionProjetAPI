@@ -21,7 +21,8 @@ export class TrelloCardUserController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {cardId, userId} = req.body;
+            const cardId = parseInt(req.params.cardId);
+            const {userId} = req.body;
             const cu = new TrelloCardUser(userId, cardId, false)
             const newCU = await TrelloCardUserDAO.create(cu)
             res.status(200).json(newCU.toJson());

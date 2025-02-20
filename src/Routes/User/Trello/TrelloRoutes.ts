@@ -3,8 +3,8 @@ const router = express.Router({ mergeParams: true });
 import {TrelloController} from "../../../Controllers/Trello/TrelloController";
 import TrelloListRoutes from "./TrelloListRoutes";
 
-router.get('/', TrelloController.getAllByProject)   //todo on prend l id dans le token
-router.get('/del', TrelloController.getAllDelByProject) //todo on prend l id dans le token
+router.get('/', TrelloController.getAllByProject)
+router.get('/del', TrelloController.getAllDelByProject) //todo collaborateur/admin
 
 router.get('/:id', TrelloController.find)
 
@@ -15,6 +15,6 @@ router.put('/restore/:id', TrelloController.restore)    //todo collaborateur/adm
 
 router.delete('/:id', TrelloController.softDelete)  //todo collaborateur/admin
 
-router.use('/:trelloId/list', TrelloListRoutes)
+router.use('/:trelloId/List', TrelloListRoutes)
 
 export default router;

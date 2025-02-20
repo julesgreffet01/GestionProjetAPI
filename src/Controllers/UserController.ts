@@ -18,7 +18,7 @@ export class UserController {
                 } else if (user instanceof User) {
                     const token = jwt.sign(
                         {random: random, id: user.id}, JWT_SECRET, {expiresIn: '1h'});
-                    res.status(200).json(user.toJson());
+                    res.status(200).json({token: token});
                 } else {
                     res.status(500).json({error: 'Erreur serveur.'});
                 }

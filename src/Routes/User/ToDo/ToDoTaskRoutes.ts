@@ -11,11 +11,11 @@ router.get('/:id', ToDoTaskController.find)
 router.post('/', ToDoTaskController.create)     //todo collaborateur/admin
 
 router.put('/:id', ToDoTaskController.update)   //todo collaborateur/admin
-router.put('/realiser/:id', ToDoTaskController.realiser)    //todo collaborateur/admin
+router.put('/realised/:id', ToDoTaskController.realiser)    //todo collaborateur/admin et prendre l id du user dans son token
 router.put('/ordre/', ToDoTaskController.updateOrder)   //todo collaborateur/admin
-router.put('/enCours', ToDoTaskController.enCours)      //todo collaborateur/admin
+router.put('/enCours/:id', ToDoTaskController.enCours)      //todo collaborateur/admin
 
 
-router.use('/:taskId/taskUser', ToDoTaskUserRoutes)
+router.use('/:taskId/TaskUser', ToDoTaskUserRoutes)
 
 export default router;

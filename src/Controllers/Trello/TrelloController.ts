@@ -51,7 +51,8 @@ export class TrelloController {
 
     static async create(req: Request, res: Response) {
         try {
-            const {nom, projectId} = req.body;
+            const projectId = parseInt(req.params.projectId);
+            const {nom} = req.body;
             if(nom && projectId){
                 const project = await ProjectDAO.find(projectId)
                 if(!project){
@@ -79,7 +80,8 @@ export class TrelloController {
     static async update(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const {nom, projectId} = req.body;
+            const projectId = parseInt(req.params.projectId);
+            const {nom} = req.body;
             if(nom && projectId){
                 const project = await ProjectDAO.find(projectId);
                 if(!project){

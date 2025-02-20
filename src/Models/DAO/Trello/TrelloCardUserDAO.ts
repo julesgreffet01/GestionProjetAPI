@@ -37,7 +37,7 @@ export class TrelloCardUserDAO {
 
     static async create(card: TrelloCardUser) {
         const client = await connectDB();
-        const query = `INSERT INTO "TrelloCardUser"("idCard", idUser) VALUES ($1, $2);`;
+        const query = `INSERT INTO "TrelloCardUser"("idCard", "idUser") VALUES ($1, $2) RETURNING *`;
         try {
             const result = await client.query(query, [card.idCard, card.idUser]);
             return new TrelloCardUser(result.rows[0].idUser, result.rows[0].idCard, result.rows[0].del)

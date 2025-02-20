@@ -10,8 +10,9 @@ export class TrelloCardDAO extends GlobalDAO {
         return `"TrelloCards"`;
     }
     async objectToClass(row: any): Promise<TrelloCard> {
+        console.log(row);
         const list = await TrelloListDAO.find(row.idList);
-        const realisateur = row.idrealisateur ? await UserDAO.find(row.idrealisateur) : null;
+        const realisateur = row.idRealisateur ? await UserDAO.find(row.idRealisateur) : null;
         return new TrelloCard(
             row.id,
             row.nom,
@@ -95,7 +96,7 @@ export class TrelloCardDAO extends GlobalDAO {
     static async changeRealised(taskId: number, real: boolean, realisateurId: number | null = null){
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
-        const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3`;
+        const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3 RETURNING *`;
         try {
             const result = await client.query(query, [real, realisateurId, taskId]);
             return await this.prototype.objectToClass(result.rows[0]);

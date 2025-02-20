@@ -92,7 +92,8 @@ export class TrelloCard {
         return {
             nom: this.nom,
             description: this.description,
-            dateReal: this.dateReal
+            dateReal: this.dateReal,
+            idList: idList
         }
     }
 

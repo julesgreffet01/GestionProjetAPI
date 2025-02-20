@@ -16,6 +16,6 @@ router.put('/restore/:id', ToDoController.restore)   //todo collaborateur/admin
 router.delete('/:id', ToDoController.softDelete)    //todo collaborateur/admin
 
 
-router.use('/:todoId/task', ToDoTaskRoutes)
+router.use('/:todoId/Task', ToDoTaskRoutes)
 
 export default router;

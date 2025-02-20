@@ -55,7 +55,7 @@ export class ToDoTaskDAO extends GlobalDAO {
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            const query = `SELECT * FROM ${tableName} WHERE del = FALSE AND "idTodo" = $1 ORDER BY ordre ASC`;
+            const query = `SELECT * FROM ${tableName} WHERE realised = FALSE AND "idTodo" = $1 ORDER BY ordre ASC`;
             const result = await client.query(query, [toDoId]);
             return await Promise.all(result.rows.map(async (row) => {
                 return await this.prototype.objectToClass(row);
@@ -71,7 +71,7 @@ export class ToDoTaskDAO extends GlobalDAO {
     static async getAllRealisedByTodo(toDoId: number){
         const client = await connectDB();
         const tableName = this.prototype.getTableName();
-        const query = `SELECT * FROM ${tableName} WHERE del = TRUE AND "idTodo" = $1 ORDER BY ordre ASC`;
+        const query = `SELECT * FROM ${tableName} WHERE realised = TRUE AND "idTodo" = $1 ORDER BY ordre ASC`;
         try {
             const result = await client.query(query, [toDoId]);
             return await Promise.all(result.rows.map(async (row) => {
@@ -111,7 +111,7 @@ export class ToDoTaskDAO extends GlobalDAO {
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3`;
+            const query = `UPDATE ${tableName} SET realised = $1, "idRealisateur" = $2 WHERE id = $3 RETURNING *`;
             const result = await client.query(query, [real, idRealisateur, taskId]);
             return  await this.prototype.objectToClass(result.rows[0]);
         } catch (error) {
@@ -126,7 +126,7 @@ export class ToDoTaskDAO extends GlobalDAO {
         const client = await connectDB();
         try {
             const tableName = this.prototype.getTableName();
-            const query = `UPDATE ${tableName} SET "enCours" = $1 WHERE id = $2`;
+            const query = `UPDATE ${tableName} SET "enCours" = $1 WHERE id = $2 RETURNING *`;
             const result = await client.query(query, [bool, userId]);
             return  await this.prototype.objectToClass(result.rows[0]);
         }catch (error) {

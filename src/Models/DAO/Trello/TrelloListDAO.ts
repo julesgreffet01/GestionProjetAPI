@@ -8,7 +8,7 @@ export class TrelloListDAO extends GlobalDAO{
         return `"TrelloLists"`;
     }
     async objectToClass(row: any): Promise<TrelloList> {
-        const trello= await TrelloDAO.find(row.id);
+        const trello= await TrelloDAO.find(row.idTrello);
         return new TrelloList(
             row.id,
             row.nom,

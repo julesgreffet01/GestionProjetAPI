@@ -18,7 +18,7 @@ export class AdminController {
                 } else if (admin instanceof Admin) {
                     const token = jwt.sign(
                         { random: random }, JWT_SECRET, { expiresIn: '1h' });
-                    res.status(200).json(admin.toJson());
+                    res.status(200).json({token: token});
                 } else {
                     res.status(500).json({ error: 'Erreur serveur.' });
                 }

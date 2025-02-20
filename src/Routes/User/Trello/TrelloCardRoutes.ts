@@ -8,12 +8,12 @@ router.get('/realised', TrelloCardController.getAllRealisedByTrello)    //todo a
 
 router.get('/:id', TrelloCardController.find)
 
-router.post('/:id', TrelloCardController.create)    //todo admin/collaborateur
+router.post('/', TrelloCardController.create)    //todo admin/collaborateur
 
 router.put('/:id', TrelloCardController.update)     //todo admin/collaborateur
-router.put('/realised/:id', TrelloCardController.changeRealised)    //todo admin/collaborateur
+router.put('/realised/:id', TrelloCardController.changeRealised)    //todo admin/collaborateur faire avec l id dans le token
 router.put('/position/:id', TrelloCardController.updatePosition)    //todo admin/collaborateur
 
-router.use('/:cardId/cardUser', TrelloCardUserRoutes)
+router.use('/:cardId/CardUser', TrelloCardUserRoutes)
 
 export default router;

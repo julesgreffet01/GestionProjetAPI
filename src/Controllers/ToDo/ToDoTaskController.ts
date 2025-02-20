@@ -126,7 +126,7 @@ export class ToDoTaskController {
                 return;
             } else if(real){
                 const {realisateurId} = req.body
-                if(realisateurId != null){
+                if(realisateurId == null){
                     res.status(404).json({ error: 'Not all information' });
                     return;
                 }
