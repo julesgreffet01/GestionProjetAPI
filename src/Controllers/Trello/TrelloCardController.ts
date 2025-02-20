@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {TrelloCardDAO} from "../../Models/DAO/Trello/TrelloCardDAO";
 import {TrelloCard} from "../../Models/BO/Trello/TrelloCard";
 import {TrelloListDAO} from "../../Models/DAO/Trello/TrelloListDAO";
+import {CustomRequest} from "../../Interfaces";
 
 export class TrelloCardController {
 
@@ -116,7 +117,7 @@ export class TrelloCardController {
         }
     }
 
-    static async changeRealised(req: Request, res: Response) {
+    static async changeRealised(req: CustomRequest, res: Response) {
         try {
             const {real} = req.body;
             const id = parseInt(req.params.id);
@@ -129,7 +130,7 @@ export class TrelloCardController {
                 res.status(404).json({ error: 'Not all information' });
                 return;
             } else if(real){
-                const {realisateurId} = req.body
+                const realisateurId = req.token?.id
                 if(realisateurId == null){
                     res.status(404).json({ error: 'Not all information' });
                     return;

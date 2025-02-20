@@ -2,18 +2,19 @@ import express from 'express';
 const router = express.Router({ mergeParams: true });
 import {ToDoTaskController} from "../../../Controllers/ToDo/ToDoTaskController";
 import ToDoTaskUserRoutes from "./ToDoTaskUserRoutes";
+import {verifDroitUser} from "../../../Middlewares/UserVerifDroitInProject";
 
 router.get('/', ToDoTaskController.getAllByOrdreByTodo)
 router.get('/realised', ToDoTaskController.getAllRealisedByTodo)
 
 router.get('/:id', ToDoTaskController.find)
 
-router.post('/', ToDoTaskController.create)     //todo collaborateur/admin
+router.post('/', verifDroitUser('Collaborateur', 'Admin'), ToDoTaskController.create)
 
-router.put('/:id', ToDoTaskController.update)   //todo collaborateur/admin
-router.put('/realised/:id', ToDoTaskController.realiser)    //todo collaborateur/admin et prendre l id du user dans son token
-router.put('/ordre/', ToDoTaskController.updateOrder)   //todo collaborateur/admin
-router.put('/enCours/:id', ToDoTaskController.enCours)      //todo collaborateur/admin
+router.put('/:id', verifDroitUser('Collaborateur', 'Admin'), ToDoTaskController.update)
+router.put('/realised/:id', verifDroitUser('Collaborateur', 'Admin'), ToDoTaskController.realiser)
+router.put('/ordre/', verifDroitUser('Collaborateur', 'Admin'), ToDoTaskController.updateOrder)
+router.put('/enCours/:id', verifDroitUser('Collaborateur', 'Admin'), ToDoTaskController.enCours)
 
 
 router.use('/:taskId/TaskUser', ToDoTaskUserRoutes)

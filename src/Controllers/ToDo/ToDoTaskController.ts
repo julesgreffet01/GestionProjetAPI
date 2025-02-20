@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {ToDoTaskDAO} from "../../Models/DAO/ToDo/ToDoTaskDAO";
 import {ToDoTask} from "../../Models/BO/ToDo/ToDoTask";
 import {ToDoDAO} from "../../Models/DAO/ToDo/ToDoDAO";
+import {CustomRequest} from "../../Interfaces";
 
 
 export class ToDoTaskController {
@@ -116,7 +117,7 @@ export class ToDoTaskController {
         }
     }
 
-    static async realiser(req: Request, res: Response) {
+    static async realiser(req: CustomRequest, res: Response) {
         try {
             const {real} = req.body;
             const id = parseInt(req.params.id);
@@ -125,7 +126,7 @@ export class ToDoTaskController {
                 res.status(404).json({error: 'Not all information'});
                 return;
             } else if(real){
-                const {realisateurId} = req.body
+                const realisateurId = req.token?.id
                 if(realisateurId == null){
                     res.status(404).json({ error: 'Not all information' });
                     return;
@@ -156,11 +157,7 @@ export class ToDoTaskController {
                 return;
             }
             const task = await ToDoTaskDAO.enCours(id, enCours);
-            if(task instanceof ToDoTask){
-                res.status(200).json(task.toJson());
-            } else {
-                res.status(500).json({error: 'Erreur Serveur'});
-            }
+            res.status(200).json(task.toJson());
         } catch (e) {
             console.error(e);
             res.status(500).json({error: 'Erreur Serveur'});
