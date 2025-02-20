@@ -50,7 +50,6 @@ export class TrelloCardController {
     static async create(req: Request, res: Response) {
         try {
             const listId = parseInt(req.params.listId);
-            console.log(listId);
             const {nom, desc, dateReal} = req.body;
             const list = await TrelloListDAO.find(listId);
             if(!list){

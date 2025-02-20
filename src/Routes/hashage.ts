@@ -12,12 +12,9 @@ const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {
         for (let admin of result.rows) {
             // Vérifier si le mot de passe est déjà haché (bcrypt)
             if (!admin.mdp.startsWith('$2b$') && !admin.mdp.startsWith('$2a$')) {
-                console.log(`Hashing password for admin ID: ${admin.id}`);
                 const hashedPassword = await bcrypt.hash(admin.mdp, 10); // 10 est le nombre de "rounds" de hachage
                 const updateQuery = 'UPDATE "Admin" SET mdp = $1 WHERE id = $2';
                 await client.query(updateQuery, [hashedPassword, admin.id]);  // Mettre à jour le mot de passe haché
-            } else {
-                console.log(`Password already hashed for admin ID: ${admin.id}`);
             }
         }
 
@@ -27,12 +24,9 @@ const verifyAndHashPasswords = async (req: any, res: any): Promise<void> => {
         // Parcourir tous les utilisateurs
         for (let user of result2.rows) {
             if (!user.mdp.startsWith('$2b$') && !user.mdp.startsWith('$2a$')) {
-                console.log(`Hashing password for user ID: ${user.id}`);
                 const hashedPassword = await bcrypt.hash(user.mdp, 10);
                 const updateQuery = 'UPDATE "Users" SET mdp = $1 WHERE id = $2';
                 await client.query(updateQuery, [hashedPassword, user.id]);
-            } else {
-                console.log(`Password already hashed for user ID: ${user.id}`);
             }
         }
 

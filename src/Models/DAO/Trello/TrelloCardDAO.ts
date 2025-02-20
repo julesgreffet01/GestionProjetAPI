@@ -10,7 +10,6 @@ export class TrelloCardDAO extends GlobalDAO {
         return `"TrelloCards"`;
     }
     async objectToClass(row: any): Promise<TrelloCard> {
-        console.log(row);
         const list = await TrelloListDAO.find(row.idList);
         const realisateur = row.idRealisateur ? await UserDAO.find(row.idRealisateur) : null;
         return new TrelloCard(

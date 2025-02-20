@@ -12,7 +12,6 @@ const pool = new Pool({
 const connectDB = async () => {
     try {
         const client = await pool.connect();
-        console.log("Connected to DB");
         return client;
     } catch (err) {
         console.error("Erreur de connexion à la base de données :", err);

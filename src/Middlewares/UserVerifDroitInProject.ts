@@ -41,7 +41,7 @@ export function verifDroitUser(...allowedRoles: string[]) {
             }
             next();  // Autorisation accordée
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(403).json({ error: 'Erreur middleware verif droit'});
         }
 
